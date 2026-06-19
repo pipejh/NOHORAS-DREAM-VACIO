@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nohoras Dream — Prototipo UX</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23FBF6E9'/%3E%3Ccircle cx='32' cy='30' r='9' fill='%23EAA716'/%3E%3Cg stroke='%23EAA716' stroke-width='2.4' stroke-linecap='round'%3E%3Cline x1='32' y1='10' x2='32' y2='15'/%3E%3Cline x1='17' y1='15' x2='20' y2='19'/%3E%3Cline x1='47' y1='15' x2='44' y2='19'/%3E%3Cline x1='10' y1='30' x2='15' y2='30'/%3E%3Cline x1='49' y1='30' x2='54' y2='30'/%3E%3C/g%3E%3Cpath d='M4 42c6 0 6-4 12-4s6 4 12 4 6-4 12-4 6 4 12 4 6-4 8-4v6c-2 0-2 4-8 4s-6-4-12-4-6 4-12 4-6-4-12-4-6 4-12 4z' fill='%23173B5E'/%3E%3Cpath d='M4 50c6 0 6-3 12-3s6 3 12 3 6-3 12-3 6 3 12 3 6-3 8-3v8H4z' fill='%233E7CB1'/%3E%3Cpath d='M4 56c6 0 6-2 12-2s6 2 12 2 6-2 12-2 6 2 12 2 6-2 8-2v6H4z' fill='%237FB5DD'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    /* ===== Paleta oficial Nohoras Dream (derivada del logo) ===== */
+    --nd-navy:#173B5E;        /* marino — wordmark NOHORAS, texto, fondos oscuros */
+    --nd-navy-deep:#102A45;   /* marino profundo — heros, degradados */
+    --nd-blue:#3E7CB1;        /* azul ola — primario interactivo */
+    --nd-sky:#7FB5DD;         /* cielo — base de la ola, detalles */
+    --nd-gold:#EAA716;        /* dorado sol — ACENTO PRINCIPAL / CTA / DREAM */
+    --nd-gold-soft:#F2C24B;   /* dorado claro — hover, highlights */
+    --nd-cream:#FBF6E9;       /* crema — fondo base */
+    --nd-sand:#F3EAD6;        /* arena — secciones alternas, cards */
+    --nd-ink:#16243A;         /* texto principal (tinte marino) */
+    --nd-muted:#6B7280;       /* texto secundario */
+    --ok:#2E7D5B;
+    --warn:#EAA716;
+    --danger:#C0552F;
+
+    /* ===== Alias semánticos (mapean al uso previo del prototipo) ===== */
+    --nd-deep:var(--nd-navy-deep); /* "deep" => marino profundo */
+    --nd-sea:var(--nd-blue);       /* primario interactivo pasa al azul de la ola */
+    --nd-coral:var(--nd-gold);
+
+    /* degradado de la ola (recurso de marca) */
+    --wave:linear-gradient(90deg,var(--nd-navy) 0%,var(--nd-blue) 55%,var(--nd-sky) 100%);
+
+    --font-wordmark:'Cinzel',Georgia,serif;
+    --font-display:'Cormorant Garamond',Georgia,serif;
+    --font-body:'Inter',system-ui,sans-serif;
+    --r-sm:6px; --r-md:8px; --r-lg:10px; --r-xl:14px;
+    --shadow-sm:0 1px 2px rgba(16,42,69,.05), 0 6px 22px rgba(16,42,69,.05);
+    --shadow-md:0 10px 40px rgba(16,42,69,.09);
+    --shadow-lg:0 30px 80px rgba(16,42,69,.14);
+    --maxw:1200px;
+    --hairline:rgba(16,42,69,.12);
+    --ease-lux:cubic-bezier(.16,1,.3,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--font-body);
+    color:var(--nd-ink);
+    background:var(--nd-cream);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{display:block;max-width:100%}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  a{color:inherit;text-decoration:none}
+
+  /* ---------- Layout helpers ---------- */
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  .view{display:none;animation:fade .5s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .eyebrow{
+    font-family:var(--font-wordmark);
+    font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;
+    font-weight:600;color:#B8810C
+  }
+  h1,h2,h3{font-family:var(--font-display);font-weight:600;line-height:1.05;letter-spacing:0}
+  .section-title{font-size:clamp(2rem,4.4vw,3rem);color:var(--nd-navy);margin:.4rem 0 .6rem}
+  .lede{color:var(--nd-muted);max-width:560px;font-size:1.08rem}
+
+  /* ---------- Recursos de marca: ola + sol ---------- */
+  .wave-rule{height:4px;border:0;border-radius:99px;margin:0;background:var(--wave)}
+  .block{position:relative}
+  .block.alt{border-top:3px solid transparent;border-image:var(--wave) 1}
+
+  /* ---------- Top nav ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:60;
+    background:rgba(251,246,233,.85);backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(16,42,69,.08);
+  }
+  .topbar::after{content:"";display:block;height:2px;background:var(--wave);opacity:.85}
+  .topbar-inner{display:flex;align-items:center;gap:18px;height:64px}
+  .brand{display:flex;align-items:center;gap:11px;cursor:pointer}
+  .brand .brand-logo{height:50px;width:auto;display:block;flex:none}
+  .brand .iso{width:34px;height:34px;flex:none}
+  .brand .lockup{display:flex;flex-direction:column;line-height:1}
+  .brand .wordmark{font-family:var(--font-wordmark);font-weight:600;font-size:1.06rem;
+    letter-spacing:.06em;color:var(--nd-navy)}
+  .brand .wordmark .dream{color:var(--nd-gold)}
+  .brand small{display:block;font-family:var(--font-body);font-weight:500;
+    font-size:.58rem;letter-spacing:.26em;color:var(--nd-muted);text-transform:uppercase;margin-top:3px}
+  /* isotipo SVG: sol naciente + olas en degradado azul */
+  .iso .sun{fill:var(--nd-gold)}
+  .iso .ray{stroke:var(--nd-gold);stroke-width:2.2;stroke-linecap:round}
+  .nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+  .nav button{
+    padding:8px 13px;border-radius:99px;font-size:.85rem;font-weight:500;
+    color:var(--nd-muted);transition:.2s;white-space:nowrap
+  }
+  .nav button:hover{color:var(--nd-navy);background:rgba(62,124,177,.1)}
+  .nav button.on{background:var(--nd-navy);color:#fff}
+  .nav-toggle{display:none}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    padding:13px 22px;border-radius:99px;font-weight:600;font-size:.95rem;
+    transition:transform .15s, box-shadow .2s, background .2s;
+  }
+  .btn:active{transform:scale(.97)}
+  .btn-primary{background:var(--nd-blue);color:#fff;box-shadow:0 6px 18px rgba(62,124,177,.35)}
+  .btn-primary:hover{background:var(--nd-navy);box-shadow:0 10px 26px rgba(23,59,94,.42)}
+  /* CTA principal — dorado sol; texto marino oscuro para contraste AA */
+  .btn-gold{background:var(--nd-gold);color:var(--nd-navy-deep);box-shadow:0 6px 18px rgba(234,167,22,.4)}
+  .btn-gold:hover{background:var(--nd-gold-soft);box-shadow:0 10px 26px rgba(234,167,22,.5)}
+  .btn-wa{background:#25D366;color:#fff}
+  .btn-wa:hover{background:#1eb155}
+  .btn-ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.4)}
+  .btn-ghost:hover{background:rgba(255,255,255,.24)}
+  .btn-outline{border:1.5px solid var(--nd-blue);color:var(--nd-blue);background:transparent}
+  .btn-outline:hover{background:rgba(62,124,177,.08)}
+  .btn-block{width:100%}
+  .btn-sm{padding:8px 14px;font-size:.82rem}
+  /* WhatsApp directo — mismo peso visual que el CTA dorado: marino con borde dorado */
+  .btn-wa-direct{background:var(--nd-navy);color:#fff;border:1.5px solid var(--nd-gold);
+    box-shadow:0 6px 18px rgba(23,59,94,.32)}
+  .btn-wa-direct:hover{background:var(--nd-navy-deep);box-shadow:0 10px 26px rgba(23,59,94,.42)}
+  .btn-wa-direct .wa-ic{width:17px;height:17px;flex:none}
+
+  /* ---------- Dual CTA: dos vías de reserva con igual peso ---------- */
+  .dual-cta{display:flex;gap:12px;flex-wrap:wrap}
+  .dual-cta .btn{flex:1 1 220px}
+  .reserve-microcopy{font-size:.82rem;color:var(--nd-muted);margin-top:12px;line-height:1.5}
+  .reserve-microcopy b{color:var(--nd-navy);font-weight:600}
+  /* sobre fondo oscuro (hero) el microcopy va claro */
+  .sm-hero .reserve-microcopy{color:rgba(255,255,255,.8)}
+  .sm-hero .reserve-microcopy b{color:var(--nd-gold-soft)}
+
+  /* ---------- Badges ---------- */
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:99px;
+    font-size:.74rem;font-weight:600;letter-spacing:.01em}
+  .badge .dot{width:7px;height:7px;border-radius:50%}
+  .badge-ok{background:rgba(46,125,91,.12);color:var(--ok)}
+  .badge-ok .dot{background:var(--ok)}
+  .badge-warn{background:rgba(234,167,22,.16);color:#9a6f0c}
+  .badge-warn .dot{background:var(--warn)}
+  .badge-danger{background:rgba(192,85,47,.13);color:var(--danger)}
+  .badge-danger .dot{background:var(--danger)}
+
+  /* ============ HOME ============ */
+  .home-hero{
+    position:relative;color:#fff;text-align:center;
+    padding:104px 22px 124px;overflow:hidden;
+    background:linear-gradient(165deg,var(--nd-navy-deep) 0%, var(--nd-navy) 55%, var(--nd-blue) 135%);
+  }
+  /* sol naciente dorado como motivo sutil + brillo de ola */
+  .home-hero::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(circle at 50% -18%, rgba(234,167,22,.55), rgba(234,167,22,0) 42%),
+               radial-gradient(circle at 92% 105%, rgba(127,181,221,.28), transparent 42%);
+  }
+  .home-hero .wrap{position:relative;z-index:2}
+  .home-hero h1{font-size:clamp(2.4rem,6vw,4.2rem);max-width:14ch;margin:14px auto 18px}
+  .home-hero h1 em{font-style:italic;color:var(--nd-gold)}
+  .home-hero p{color:rgba(255,255,255,.82);max-width:46ch;margin:0 auto;font-size:1.08rem}
+  .home-hero .eyebrow{color:var(--nd-gold)}
+
+  .props{margin-top:-72px;position:relative;z-index:5;padding-bottom:70px}
+  .prop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .prop-card{
+    background:#fff;border-radius:var(--r-lg);overflow:hidden;
+    box-shadow:var(--shadow-md);transition:transform .25s, box-shadow .25s;
+    display:flex;flex-direction:column;cursor:pointer
+  }
+  .prop-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+  .prop-photo{height:200px;position:relative;overflow:hidden}
+  .prop-photo img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+  .prop-card:hover .prop-photo img{transform:scale(1.06)}
+  .prop-photo .city{position:absolute;left:14px;top:14px;background:rgba(14,42,51,.62);
+    color:#fff;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+    padding:5px 11px;border-radius:99px;backdrop-filter:blur(6px)}
+  .prop-photo.soon{background:linear-gradient(150deg,var(--nd-navy-deep),var(--nd-blue));
+    display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5)}
+  .prop-photo.soon span{font-family:var(--font-display);font-style:italic;font-size:1.3rem}
+  .prop-body{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1}
+  .prop-kind{font-size:.74rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--nd-sea)}
+  .prop-body h3{font-size:1.5rem;color:var(--nd-deep);margin:4px 0 8px}
+  .prop-body p{color:var(--nd-muted);font-size:.92rem;flex:1}
+  .prop-body .btn{margin-top:18px}
+
+  .home-strip{background:var(--nd-sand);padding:54px 0}
+  .strip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
+  .strip-grid .num{font-family:var(--font-display);font-size:2.4rem;color:var(--nd-sea);font-weight:600}
+  .strip-grid .lbl{font-size:.84rem;color:var(--nd-muted)}
+
+  /* ============ SANTA MARTA ============ */
+  .sm-hero{position:relative;min-height:86vh;display:flex;align-items:flex-end;color:#fff;overflow:hidden}
+  .sm-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .sm-hero::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(16,42,69,.34) 0%, rgba(16,42,69,.04) 38%, rgba(16,42,69,.82) 100%)}
+  .sm-hero .wrap{position:relative;z-index:3;padding-bottom:54px;padding-top:120px;width:100%}
+  .sm-hero h1{font-size:clamp(2.6rem,6.4vw,4.6rem);max-width:16ch;margin:14px 0 16px;text-shadow:0 2px 30px rgba(0,0,0,.4)}
+  .sm-hero h1 em{font-style:italic;color:var(--nd-gold)}
+  .sm-hero p{max-width:48ch;color:rgba(255,255,255,.9);font-size:1.08rem;margin-bottom:26px}
+  .sm-hero .eyebrow{color:var(--nd-gold-soft)}
+  .sm-hero h1 em,.home-hero h1 em,.cucuta h1 em{font-family:var(--font-display);font-style:italic;color:var(--nd-gold-soft);font-weight:600}
+  .sm-hero .hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+  .lang{position:absolute;top:16px;right:0;z-index:4;display:flex;background:rgba(14,42,51,.45);
+    border:1px solid rgba(255,255,255,.35);border-radius:99px;padding:3px;backdrop-filter:blur(8px)}
+  .lang button{padding:6px 14px;border-radius:99px;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.8)}
+  .lang button.on{background:#fff;color:var(--nd-deep)}
+
+  .sm-meta{display:flex;gap:26px;flex-wrap:wrap;margin-top:6px;font-size:.92rem;color:rgba(255,255,255,.92)}
+  .sm-meta b{font-weight:600}
+
+  .block{padding:64px 0}
+  .block.alt{background:var(--nd-sand)}
+
+  /* gallery */
+  .gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:150px;gap:12px;margin-top:30px}
+  .gallery figure{overflow:hidden;border-radius:var(--r-md);cursor:pointer;position:relative;background:#ddd}
+  .gallery img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+  .gallery figure:hover img{transform:scale(1.07)}
+  .gallery .big{grid-column:span 2;grid-row:span 2}
+  .gallery .tall{grid-row:span 2}
+  .gallery figure::after{content:"";position:absolute;inset:0;background:rgba(16,42,69,0);transition:.3s}
+  .gallery figure:hover::after{background:rgba(16,42,69,.12)}
+
+  /* features */
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+  .feat{background:#fff;border-radius:var(--r-md);padding:24px;box-shadow:var(--shadow-sm);
+    border:1px solid rgba(16,42,69,.06)}
+  .feat .ic{width:44px;height:44px;border-radius:12px;background:rgba(62,124,177,.12);color:var(--nd-blue);
+    display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:12px}
+  .feat h4{font-family:var(--font-display);font-size:1.34rem;color:var(--nd-navy);margin-bottom:4px}
+  .feat p{font-size:.9rem;color:var(--nd-muted)}
+
+  /* calendar + quoter layout */
+  .booking-layout{display:grid;grid-template-columns:1.4fr .9fr;gap:34px;align-items:start;margin-top:30px}
+  .cal{background:#fff;border-radius:var(--r-lg);padding:24px;box-shadow:var(--shadow-sm);border:1px solid rgba(16,42,69,.06)}
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .cal-head h3{font-size:1.5rem;color:var(--nd-navy)}
+  .cal-nav{display:flex;gap:8px}
+  .cal-nav button{width:36px;height:36px;border-radius:50%;background:var(--nd-cream);color:var(--nd-navy);
+    font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:.2s}
+  .cal-nav button:hover{background:var(--nd-sand)}
+  .cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
+  .cal-dow span{text-align:center;font-size:.7rem;font-weight:600;color:var(--nd-muted);letter-spacing:.06em}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .day{aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-size:.82rem;font-weight:600;position:relative;transition:.15s}
+  .day .pr{font-size:.56rem;font-weight:500;color:var(--nd-muted);margin-top:1px}
+  .day.empty{visibility:hidden}
+  .day.avail{background:rgba(62,124,177,.08);color:var(--nd-navy);cursor:pointer;border:1px solid transparent}
+  .day.avail:hover{background:rgba(62,124,177,.18);border-color:var(--nd-blue)}
+  .day.high{background:rgba(234,167,22,.16)}
+  .day.high .pr{color:#9a6f0c}
+  .day.blocked{background:#eee;color:#bbb;text-decoration:line-through;cursor:not-allowed}
+  .day.blocked .pr{display:none}
+  .day.sel{background:var(--nd-blue)!important;color:#fff;border-color:var(--nd-blue)}
+  .day.sel .pr{color:rgba(255,255,255,.85)}
+  .cal-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;font-size:.74rem;color:var(--nd-muted)}
+  .cal-legend span{display:flex;align-items:center;gap:6px}
+  .cal-legend i{width:13px;height:13px;border-radius:4px;display:inline-block}
+
+  /* quoter / booking card */
+  .book-card{background:#fff;border-radius:var(--r-lg);padding:26px;box-shadow:var(--shadow-md);
+    border:1px solid rgba(14,42,51,.06);position:sticky;top:84px}
+  .book-card .from{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
+  .book-card .from b{font-family:var(--font-display);font-size:2rem;color:var(--nd-deep)}
+  .book-card .from small{color:var(--nd-muted);font-size:.85rem}
+  .book-card .rating{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--nd-deep);margin-bottom:18px}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+  .field{border:1px solid rgba(14,42,51,.15);border-radius:12px;padding:10px 12px}
+  .field label{display:block;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--nd-muted);font-weight:600}
+  .field input,.field select{border:none;background:none;width:100%;font-family:inherit;font-size:.92rem;color:var(--nd-deep);outline:none;margin-top:2px}
+  .breakdown{margin:18px 0;border-top:1px solid rgba(14,42,51,.1);padding-top:16px}
+  .breakdown .row{display:flex;justify-content:space-between;font-size:.9rem;margin-bottom:9px;color:var(--nd-ink)}
+  .breakdown .row span:first-child{color:var(--nd-muted)}
+  .breakdown .row .u{text-decoration:underline;text-decoration-style:dotted;cursor:help}
+  .breakdown .disc{color:var(--ok)}
+  .breakdown .total{display:flex;justify-content:space-between;font-weight:700;font-size:1.05rem;
+    border-top:1px solid rgba(14,42,51,.1);padding-top:12px;margin-top:4px;color:var(--nd-deep)}
+  .book-card .note{font-size:.74rem;color:var(--nd-muted);text-align:center;margin-top:12px}
+  .book-cta{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+
+  /* reviews */
+  .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+  .rev{background:#fff;border-radius:var(--r-md);padding:22px;box-shadow:var(--shadow-sm);border:1px solid rgba(14,42,51,.05)}
+  .rev .stars{color:var(--nd-gold);font-size:.9rem;letter-spacing:2px;margin-bottom:10px}
+  .rev p{font-size:.92rem;color:var(--nd-ink);font-style:italic;margin-bottom:14px}
+  .rev .who{display:flex;align-items:center;gap:10px}
+  .rev .av{width:38px;height:38px;border-radius:50%;background:var(--nd-sand);color:var(--nd-sea);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem}
+  .rev .who b{font-size:.88rem;display:block;color:var(--nd-deep)}
+  .rev .who small{color:var(--nd-muted);font-size:.78rem}
+  .rev-summary{display:flex;align-items:center;gap:14px;margin-top:14px;flex-wrap:wrap}
+  .rev-summary .avg{display:flex;align-items:baseline;gap:8px}
+  .rev-summary .avg .score{font-family:var(--font-display);font-size:2.4rem;color:var(--nd-navy);font-weight:600;line-height:1}
+  .rev-summary .avg .stars{color:var(--nd-gold);font-size:1.05rem;letter-spacing:2px}
+  .rev-summary .avg .count{color:var(--nd-muted);font-size:.9rem}
+  .rev-footer{margin-top:26px;text-align:center}
+
+  /* ============ GIRON shared ============ */
+  .giron-tabs{background:var(--nd-deep);color:#fff;padding:14px 0}
+  .giron-tabs .wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .giron-tabs .gt-label{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--nd-gold);font-weight:600;margin-right:4px}
+  .giron-tabs button{padding:8px 16px;border-radius:99px;font-size:.86rem;font-weight:500;
+    color:rgba(255,255,255,.75);transition:.2s}
+  .giron-tabs button:hover{color:#fff;background:rgba(255,255,255,.1)}
+  .giron-tabs button.on{background:var(--nd-blue);color:#fff}
+  .subview{display:none}
+  .subview.active{display:block}
+
+  /* portal */
+  .portal-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+  .portal-head h2{font-size:2rem;color:var(--nd-navy)}
+  .portal-head p{color:var(--nd-muted);font-size:.92rem}
+  .avatar-chip{display:flex;align-items:center;gap:10px;background:#fff;padding:7px 14px 7px 7px;border-radius:99px;box-shadow:var(--shadow-sm)}
+  .avatar-chip .av{width:34px;height:34px;border-radius:50%;background:var(--nd-navy);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem}
+  .avatar-chip b{font-size:.85rem;color:var(--nd-deep)}
+  .avatar-chip small{font-size:.72rem;color:var(--nd-muted);display:block}
+
+  .portal-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:22px;align-items:start}
+  .status-card{border-radius:var(--r-lg);padding:30px;color:#fff;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,var(--nd-navy),var(--nd-navy-deep));box-shadow:var(--shadow-md)}
+  /* franja de ola dorada en el borde superior del estado al día */
+  .status-card::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;background:var(--wave);z-index:3}
+  .status-card.mora{background:linear-gradient(135deg,#b9542f,#933e21)}
+  .status-card::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;
+    border-radius:50%;background:rgba(255,255,255,.08)}
+  .status-card .st-row{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2;flex-wrap:wrap;gap:14px}
+  .status-card .label{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;opacity:.85;font-weight:600}
+  .status-card h2{font-family:var(--font-display);font-size:2.2rem;margin:6px 0 2px}
+  .status-card .sub{opacity:.9;font-size:.95rem}
+  .status-card .amount{text-align:right}
+  .status-card .amount .big{font-family:var(--font-display);font-size:2rem;font-weight:600}
+  .status-card .amount small{display:block;opacity:.85;font-size:.78rem}
+  .status-card .btn{margin-top:22px;position:relative;z-index:2}
+  .status-card .meta-line{margin-top:14px;font-size:.85rem;opacity:.9;position:relative;z-index:2}
+  .demo-toggle{display:flex;gap:8px;margin:18px 0 0}
+  .demo-toggle button{font-size:.78rem;padding:6px 14px;border-radius:99px;border:1px solid rgba(16,42,69,.16);
+    color:var(--nd-muted);background:#fff;font-weight:500;transition:.2s}
+  .demo-toggle button.on{background:var(--nd-navy);color:#fff;border-color:var(--nd-navy)}
+
+  .info-card{background:#fff;border-radius:var(--r-lg);padding:24px;box-shadow:var(--shadow-sm);border:1px solid rgba(16,42,69,.06)}
+  .info-card h3{font-family:var(--font-display);font-size:1.45rem;color:var(--nd-navy);margin-bottom:16px}
+  .info-card .kv{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(16,42,69,.08);font-size:.9rem}
+  .info-card .kv:last-child{border:none}
+  .info-card .kv span{color:var(--nd-muted)}
+  .info-card .kv b{color:var(--nd-navy);font-weight:600}
+
+  /* tables */
+  .panel{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-sm);border:1px solid rgba(16,42,69,.06);overflow:hidden;margin-top:22px}
+  .panel-head{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid rgba(16,42,69,.07)}
+  .panel-head h3{font-family:var(--font-display);font-size:1.5rem;color:var(--nd-navy)}
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--nd-muted);
+    font-weight:600;padding:13px 24px;background:var(--nd-cream)}
+  td{padding:14px 24px;font-size:.9rem;border-top:1px solid rgba(16,42,69,.07);color:var(--nd-ink);vertical-align:middle}
+  tbody tr{transition:.15s}
+  tbody tr:hover{background:rgba(62,124,177,.06)}
+  td .name{display:flex;align-items:center;gap:10px}
+  td .av{width:32px;height:32px;border-radius:50%;background:var(--nd-sand);color:var(--nd-navy);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex:none}
+  td b{color:var(--nd-navy)}
+  .link-btn{color:var(--nd-blue);font-weight:600;font-size:.84rem;display:inline-flex;align-items:center;gap:5px}
+  .link-btn:hover{text-decoration:underline}
+
+  /* admin KPIs */
+  .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .kpi{background:#fff;border-radius:var(--r-lg);padding:24px;box-shadow:var(--shadow-sm);border:1px solid rgba(16,42,69,.06);position:relative;overflow:hidden}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--wave)}
+  .kpi .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:14px}
+  .kpi .ic.a{background:rgba(62,124,177,.14);color:var(--nd-blue)}
+  .kpi .ic.b{background:rgba(46,125,91,.12);color:var(--ok)}
+  .kpi .ic.c{background:rgba(234,167,22,.18);color:#9a6f0c}
+  .kpi .v{font-family:var(--font-display);font-size:2.2rem;color:var(--nd-navy);font-weight:600;line-height:1}
+  .kpi .l{font-size:.84rem;color:var(--nd-muted);margin-top:6px}
+  .kpi .trend{position:absolute;top:22px;right:22px;font-size:.74rem;font-weight:600;color:var(--ok)}
+  .filters{display:flex;gap:8px;flex-wrap:wrap}
+  .filters button{padding:7px 14px;border-radius:99px;font-size:.8rem;font-weight:500;
+    border:1px solid rgba(16,42,69,.15);color:var(--nd-muted);background:#fff;transition:.2s}
+  .filters button:hover{border-color:var(--nd-blue);color:var(--nd-blue)}
+  .filters button.on{background:var(--nd-navy);color:#fff;border-color:var(--nd-navy)}
+  .search{display:flex;align-items:center;gap:8px;border:1px solid rgba(16,42,69,.15);border-radius:99px;padding:8px 14px;background:#fff}
+  .search input{border:none;outline:none;font-family:inherit;font-size:.85rem;width:150px}
+
+  /* giron public hero (small) */
+  .giron-intro{background:linear-gradient(135deg,var(--nd-navy-deep),var(--nd-blue));color:#fff;padding:46px 0;position:relative;overflow:hidden}
+  .giron-intro::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--wave)}
+  .giron-intro h1{font-size:clamp(1.8rem,4vw,2.6rem)}
+  .giron-intro p{color:rgba(255,255,255,.85);max-width:52ch;margin-top:10px}
+  .giron-intro .eyebrow{color:var(--nd-gold)}
+
+  /* ============ CUCUTA ============ */
+  .cucuta{min-height:90vh;display:flex;align-items:center;color:#fff;position:relative;overflow:hidden;
+    background:radial-gradient(circle at 70% 20%, var(--nd-blue) 0%, var(--nd-navy) 50%, var(--nd-navy-deep) 100%)}
+  .cucuta::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 85% 14%, rgba(234,167,22,.32), transparent 40%)}
+  .cucuta .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center;padding:70px 22px}
+  .cucuta .eyebrow{color:var(--nd-gold)}
+  .cucuta h1{font-size:clamp(2.6rem,6vw,4.4rem);margin:14px 0 18px}
+  .cucuta h1 em{font-style:italic;color:var(--nd-gold)}
+  .cucuta .lede2{color:rgba(255,255,255,.82);max-width:42ch;font-size:1.08rem}
+  .cucuta .tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+  .cucuta .tags span{border:1px solid rgba(255,255,255,.3);padding:6px 14px;border-radius:99px;font-size:.8rem;color:rgba(255,255,255,.85)}
+  .interest{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
+    border-radius:var(--r-lg);padding:30px;backdrop-filter:blur(12px)}
+  .interest h3{font-family:var(--font-display);font-size:1.5rem;margin-bottom:6px}
+  .interest p{color:rgba(255,255,255,.75);font-size:.9rem;margin-bottom:18px}
+  .interest .ifield{margin-bottom:12px}
+  .interest label{display:block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.65);font-weight:600;margin-bottom:5px}
+  .interest input,.interest select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.22);
+    background:rgba(255,255,255,.06);color:#fff;font-family:inherit;font-size:.92rem;outline:none}
+  .interest input::placeholder{color:rgba(255,255,255,.45)}
+  .interest .ok-msg{display:none;text-align:center;padding:30px 10px;color:#fff}
+  .interest .ok-msg .big{font-family:var(--font-display);font-size:1.4rem;margin:10px 0 4px}
+  .interest .ok-msg .check{width:54px;height:54px;border-radius:50%;background:rgba(46,125,91,.25);
+    color:#7be0a8;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto}
+
+  /* ============ FOOTER ============ */
+  footer{background:var(--nd-navy-deep);color:rgba(255,255,255,.7);padding:0 0 40px;font-size:.85rem}
+  footer .f-top{height:5px;background:var(--wave)}
+  footer .f-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;padding-top:40px}
+  footer .brand .wordmark{color:#fff;font-family:var(--font-wordmark);font-weight:600;font-size:1.06rem;letter-spacing:.06em}
+  footer .brand .wordmark .dream{color:var(--nd-gold-soft)}
+  footer .brand small{color:rgba(255,255,255,.5)}
+  footer .f-logo{height:40px;display:block;margin-bottom:6px}
+  footer a{color:rgba(255,255,255,.7)}
+  footer a:hover{color:#fff}
+
+  /* lightbox */
+  .lightbox{position:fixed;inset:0;z-index:200;background:rgba(11,24,42,.93);display:none;
+    align-items:center;justify-content:center;padding:30px;cursor:zoom-out}
+  .lightbox.on{display:flex;animation:fade .3s}
+  .lightbox img{max-width:92vw;max-height:88vh;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .lightbox .x{position:absolute;top:22px;right:26px;color:#fff;font-size:2rem;cursor:pointer;line-height:1}
+
+  /* ---------- Responsive ---------- */
+  @media(max-width:900px){
+    .prop-grid{grid-template-columns:1fr}
+    .strip-grid{grid-template-columns:repeat(2,1fr);gap:28px}
+    .feat-grid,.rev-grid,.kpi-grid{grid-template-columns:1fr}
+    .booking-layout,.portal-grid{grid-template-columns:1fr}
+    .book-card{position:static}
+    .gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:130px}
+    .gallery .big{grid-column:span 2}
+    .cucuta .wrap{grid-template-columns:1fr;gap:30px;padding:60px 22px}
+    .nav{display:none;position:absolute;top:66px;left:0;right:0;background:var(--nd-cream);
+      flex-direction:column;padding:12px;border-bottom:1px solid rgba(16,42,69,.1);box-shadow:var(--shadow-md)}
+    .nav.open{display:flex}
+    .nav button{text-align:left}
+    .nav-toggle{display:flex;margin-left:auto;width:42px;height:42px;border-radius:10px;
+      align-items:center;justify-content:center;font-size:1.3rem;color:var(--nd-navy);background:rgba(62,124,177,.1)}
+    .panel{overflow-x:auto}
+    table{min-width:640px}
+    .sm-hero{min-height:78vh}
+  }
+  @media(max-width:560px){
+    .gallery{grid-template-columns:1fr;grid-auto-rows:200px}
+    .gallery .big,.gallery .tall{grid-row:span 1;grid-column:span 1}
+    .field-row{grid-template-columns:1fr}
+    .cal{padding:16px}
+    .day .pr{font-size:.5rem}
+  }
+
+  /* ====================================================================
+     ===============  CAPA PREMIUM — movimiento + oficio  ===============
+     Filosofía: slow luxury. Todo anima solo transform/opacity. Los
+     reveals PARTEN DE ESTADO VISIBLE — si el JS/CDN falla, el contenido
+     se ve completo. GSAP los oculta sólo cuando confirma que corre.
+     ==================================================================== */
+
+  /* Línea base de íconos: trazo fino, sin relleno (oficio editorial) */
+  .ic-line{width:1.1em;height:1.1em;stroke:currentColor;fill:none;
+    stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+  /* Eyebrows / captions en versalitas con tracking generoso */
+  .eyebrow{display:inline-flex;align-items:center;gap:.7em}
+  .eyebrow::before{content:"";width:26px;height:1px;background:currentColor;opacity:.55;
+    display:inline-block;flex:none}
+  .caption{font-family:var(--font-body);font-size:.66rem;font-weight:600;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--nd-muted)}
+
+  /* Hairlines de marca (1px) usadas como separadores finos */
+  .hairline{height:1px;background:var(--hairline);border:0;margin:0}
+
+  /* Bordes redondeados moderados en cards grandes (sobrescribe pills suaves) */
+  .prop-card,.feat,.cal,.book-card,.info-card,.panel,.kpi,.status-card,.interest,
+  .rev,.gallery figure{border-radius:var(--r-lg)}
+
+  /* Botones: sin rebote; relleno deslizante + nudge de flecha + underline draw */
+  .btn{position:relative;overflow:hidden;border-radius:var(--r-md);
+    transition:color .4s var(--ease-lux), background .4s var(--ease-lux),
+               border-color .4s var(--ease-lux), transform .5s var(--ease-lux);
+    will-change:transform}
+  .btn:active{transform:translateY(1px) scale(.995)}
+  .btn .arr{display:inline-block;transition:transform .4s var(--ease-lux)}
+  .btn:hover .arr{transform:translateX(4px)}
+  /* relleno que se desliza de izquierda a derecha en los CTA sólidos */
+  .btn-gold::before,.btn-primary::before,.btn-wa-direct::before,.btn-wa::before{
+    content:"";position:absolute;inset:0;z-index:0;transform:scaleX(0);transform-origin:left;
+    transition:transform .5s var(--ease-lux)}
+  .btn-gold::before{background:var(--nd-gold-soft)}
+  .btn-primary::before{background:var(--nd-navy)}
+  .btn-wa-direct::before{background:var(--nd-navy-deep)}
+  .btn-wa::before{background:#1eb155}
+  .btn-gold:hover::before,.btn-primary:hover::before,.btn-wa-direct:hover::before,.btn-wa:hover::before{transform:scaleX(1)}
+  .btn>*{position:relative;z-index:1}
+  .btn-gold:hover,.btn-primary:hover,.btn-wa-direct:hover{box-shadow:0 14px 36px rgba(16,42,69,.22)}
+  /* link con subrayado dibujado izq→der */
+  .underline-draw{position:relative}
+  .underline-draw::after{content:"";position:absolute;left:0;bottom:-2px;height:1px;width:100%;
+    background:currentColor;transform:scaleX(0);transform-origin:left;
+    transition:transform .5s var(--ease-lux)}
+  .underline-draw:hover::after{transform:scaleX(1)}
+  .link-btn:hover{text-decoration:none}
+
+  /* Nav: barra de vidrio crema (siempre clara, para que el logo navy se lea).
+     Sobre el hero: translúcida con blur. Al hacer scroll: crema más sólida + hairline. */
+  .topbar{transition:background .5s var(--ease-lux), border-color .5s var(--ease-lux),
+            box-shadow .5s var(--ease-lux)}
+  .topbar{background:rgba(251,246,233,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+          border-bottom:1px solid transparent}
+  .topbar::after{transition:opacity .5s var(--ease-lux)}
+  .topbar:not(.solid)::after{opacity:.35}
+  .topbar.solid{background:rgba(251,246,233,.92);
+    border-bottom:1px solid var(--hairline);
+    box-shadow:0 6px 24px rgba(16,42,69,.07)}
+  /* Enlaces del nav: tono oscuro en ambos estados, para contrastar con la barra clara */
+  .nav button{color:var(--nd-ink);border-radius:var(--r-sm)}
+  .nav button:hover{color:var(--nd-navy);background:rgba(62,124,177,.12)}
+  .nav button.on{background:var(--nd-navy);color:#fff}
+  .nav-toggle{color:var(--nd-navy)}
+
+  /* ---------- Cursor magnético (solo desktop con puntero fino) ---------- */
+  .cursor-dot,.cursor-ring{position:fixed;top:0;left:0;z-index:9999;pointer-events:none;
+    border-radius:50%;transform:translate(-50%,-50%);opacity:0;
+    transition:opacity .4s var(--ease-lux), width .35s var(--ease-lux),
+               height .35s var(--ease-lux), background .35s var(--ease-lux),
+               border-color .35s var(--ease-lux)}
+  .cursor-dot{width:6px;height:6px;background:var(--nd-gold)}
+  .cursor-ring{width:34px;height:34px;border:1px solid rgba(23,59,94,.45)}
+  body.cursor-ready .cursor-dot,body.cursor-ready .cursor-ring{opacity:1}
+  body.cursor-ready{cursor:none}
+  body.cursor-ready a,body.cursor-ready button,body.cursor-ready .prop-card,
+  body.cursor-ready .gallery figure,body.cursor-ready select,body.cursor-ready input{cursor:none}
+  .cursor-ring.hover{width:54px;height:54px;border-color:var(--nd-gold);
+    background:rgba(234,167,22,.08)}
+
+  /* ---------- Reveals (estado de reposo = VISIBLE; GSAP oculta si corre) ---------- */
+  body.gsap-ready .reveal{opacity:0;transform:translateY(26px)}
+  body.gsap-ready .reveal-stagger>*{opacity:0;transform:translateY(22px)}
+  /* máscara para text-reveal por línea */
+  .line-mask{display:block;overflow:hidden}
+  body.gsap-ready .line-mask>*{display:block;transform:translateY(105%)}
+  /* Reveal de imágenes: mismo mecanismo CONFIABLE que .reveal (opacity + scale sutil).
+     Antes usaba clip-path:inset() que dejaba las fotos invisibles si el ScrollTrigger
+     no disparaba (timing con Lenis / vistas display:none). Ahora parte de opacity:0
+     y SIEMPRE se restaura a visible vía GSAP o vía la red de seguridad JS. */
+  body.gsap-ready .clip-reveal{opacity:0;transform:scale(1.04)}
+  .clip-reveal{will-change:opacity,transform}
+  /* Red de seguridad CSS: si JS marca el body como "fotos a salvo", todo visible sí o sí */
+  body.images-safe .clip-reveal{opacity:1!important;transform:none!important}
+
+  /* ---------- Grano sutil sobre secciones oscuras ---------- */
+  .grain{position:relative}
+  .grain::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;opacity:.05;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .grain>*{position:relative;z-index:2}
+
+  /* ====================================================================
+     ===============  HOME — layout editorial (no plantilla)  ===========
+     ==================================================================== */
+  .home-hero{padding:148px 22px 168px;text-align:left}
+  .home-hero .wrap{max-width:var(--maxw)}
+  .home-hero h1{margin:18px 0 22px;max-width:18ch}
+  .home-hero p{margin:0;max-width:52ch}
+  /* sol naciente animado lentísimo de fondo */
+  .home-hero .sunrise{position:absolute;left:50%;top:-14%;width:min(620px,90vw);aspect-ratio:1;
+    transform:translateX(-50%);border-radius:50%;z-index:1;pointer-events:none;
+    background:radial-gradient(circle,rgba(234,167,22,.5),rgba(234,167,22,0) 62%)}
+
+  /* Portafolio editorial: filas asimétricas imagen+texto a destiempo */
+  .props{margin-top:0;padding:0 0 30px}
+  .editorial{display:grid;gap:clamp(40px,7vw,96px);margin-top:64px}
+  .ed-row{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,72px);align-items:center}
+  .ed-row.flip .ed-media{order:2}
+  .ed-media{position:relative;overflow:hidden;border-radius:var(--r-lg);aspect-ratio:4/3}
+  .ed-media img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease-lux)}
+  .ed-row:hover .ed-media img{transform:scale(1.05)}
+  .ed-media .ed-cap{position:absolute;left:16px;bottom:14px;z-index:2;color:#fff;
+    font-size:.62rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+    text-shadow:0 1px 8px rgba(0,0,0,.5)}
+  .ed-media.soon{background:linear-gradient(150deg,var(--nd-navy-deep),var(--nd-blue));
+    display:flex;align-items:center;justify-content:center}
+  .ed-media.soon .soon-mark{font-family:var(--font-display);font-style:italic;
+    font-size:1.6rem;color:rgba(255,255,255,.65)}
+  .ed-idx{font-family:var(--font-display);font-size:.95rem;color:var(--nd-gold);
+    font-weight:600;letter-spacing:.05em}
+  .ed-body .prop-kind{display:block;margin:14px 0 6px}
+  .ed-body h3{font-size:clamp(1.9rem,3.4vw,2.7rem);color:var(--nd-navy);line-height:1.04;margin-bottom:12px}
+  .ed-body p{color:var(--nd-muted);font-size:1.04rem;max-width:42ch;margin-bottom:22px}
+  .ed-link{display:inline-flex;align-items:center;gap:.6em;font-weight:600;
+    color:var(--nd-navy);font-size:.92rem;letter-spacing:.01em}
+  .ed-link svg{width:1.05em;height:1.05em}
+  .ed-divider{margin:0;height:1px;background:var(--hairline)}
+
+  /* Franja de métricas: editorial, no 4 cajas centradas */
+  .home-strip{background:var(--nd-navy-deep);color:#fff;padding:0}
+  .home-strip .wrap{padding-top:72px;padding-bottom:72px}
+  .strip-head{max-width:48ch;margin-bottom:44px}
+  .strip-head .eyebrow{color:var(--nd-gold-soft)}
+  .strip-head h2{font-size:clamp(1.8rem,3.6vw,2.8rem);color:#fff;margin-top:10px}
+  .strip-grid{grid-template-columns:repeat(4,1fr);text-align:left;
+    border-top:1px solid rgba(255,255,255,.16)}
+  .strip-grid>div{padding:28px 24px 0 0;border-right:1px solid rgba(255,255,255,.1)}
+  .strip-grid>div:last-child{border-right:0}
+  .strip-grid .num{color:var(--nd-gold-soft);font-size:2.8rem}
+  .strip-grid .lbl{color:rgba(255,255,255,.65);font-size:.82rem;margin-top:4px}
+
+  /* ====================================================================
+     ===============  SANTA MARTA — editorial premium  ==================
+     ==================================================================== */
+  .sm-hero{min-height:96vh}
+  .sm-hero img{transform:scale(1.06)} /* base para Ken Burns */
+  .sm-hero .eyebrow::before{background:var(--nd-gold-soft)}
+  .sm-hero h1{font-size:clamp(2.8rem,7vw,5.2rem);max-width:15ch;text-shadow:0 2px 40px rgba(0,0,0,.45)}
+  .block{padding:clamp(72px,10vw,128px) 0}
+  .section-title{font-size:clamp(2.2rem,5vw,3.6rem)}
+  .lede{font-size:1.12rem;max-width:46ch}
+
+  /* Galería: hover-zoom contenido + caption en versalitas al pasar */
+  .gallery{gap:14px}
+  .gallery figure .gcap{position:absolute;left:14px;bottom:12px;z-index:3;color:#fff;
+    font-size:.58rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+    opacity:0;transform:translateY(6px);transition:.5s var(--ease-lux);
+    text-shadow:0 1px 8px rgba(0,0,0,.6)}
+  .gallery figure:hover .gcap{opacity:1;transform:none}
+  .gallery img{transition:transform 1.1s var(--ease-lux)}
+  .gallery figure:hover img{transform:scale(1.06)}
+
+  /* Cita full-bleed entre secciones (editorial) */
+  .pullquote{background:var(--nd-navy);color:#fff;text-align:center;
+    padding:clamp(72px,11vw,140px) 22px;position:relative;overflow:hidden}
+  .pullquote .wrap{max-width:30ch;position:relative;z-index:2}
+  .pullquote .mark{font-family:var(--font-display);font-size:4rem;line-height:0;
+    color:var(--nd-gold);opacity:.55;display:block;height:.6em}
+  .pullquote blockquote{font-family:var(--font-display);font-style:italic;
+    font-size:clamp(1.7rem,4vw,2.8rem);line-height:1.25;font-weight:500}
+  .pullquote cite{display:block;margin-top:26px;font-style:normal;font-family:var(--font-body);
+    font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--nd-gold-soft)}
+
+  /* "Qué incluye" editorial: foto grande + lista a destiempo (no 6 tarjetas) */
+  .incl-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);
+    align-items:center;margin-top:48px}
+  .incl-media{position:relative;overflow:hidden;border-radius:var(--r-lg);aspect-ratio:3/4}
+  .incl-media img{width:100%;height:100%;object-fit:cover}
+  .incl-media .gcap{position:absolute;left:16px;bottom:14px;color:#fff;font-size:.58rem;
+    font-weight:600;letter-spacing:.2em;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.6)}
+  .incl-list{display:flex;flex-direction:column}
+  .incl-item{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;
+    padding:22px 0;border-top:1px solid var(--hairline)}
+  .incl-item:first-child{border-top:0;padding-top:0}
+  .incl-item .ic{width:38px;height:38px;color:var(--nd-blue);flex:none;
+    display:flex;align-items:center;justify-content:center}
+  .incl-item .ic svg{width:24px;height:24px}
+  .incl-item h4{font-family:var(--font-display);font-size:1.45rem;color:var(--nd-navy);
+    margin-bottom:3px;line-height:1.1}
+  .incl-item p{font-size:.94rem;color:var(--nd-muted);max-width:38ch}
+
+  /* Reseñas editorial: una destacada grande + columna de breves */
+  .rev-editorial{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,5vw,64px);
+    margin-top:44px;align-items:start}
+  .rev-feature{background:var(--nd-sand);border-radius:var(--r-lg);padding:clamp(30px,4vw,52px);
+    border:1px solid var(--hairline)}
+  .rev-feature .stars{color:var(--nd-gold);letter-spacing:3px;font-size:1rem;margin-bottom:18px}
+  .rev-feature blockquote{font-family:var(--font-display);font-style:italic;
+    font-size:clamp(1.4rem,2.6vw,2rem);line-height:1.3;color:var(--nd-navy);margin-bottom:24px}
+  .rev-feature .who{display:flex;align-items:center;gap:12px}
+  .rev-feature .av{width:46px;height:46px}
+  .rev-list{display:flex;flex-direction:column}
+  .rev-item{padding:22px 0;border-top:1px solid var(--hairline)}
+  .rev-item:first-child{border-top:0;padding-top:0}
+  .rev-item .stars{color:var(--nd-gold);letter-spacing:2px;font-size:.82rem;margin-bottom:8px}
+  .rev-item p{font-size:.95rem;color:var(--nd-ink);font-style:italic;margin-bottom:10px}
+  .rev-item .who{display:flex;align-items:center;gap:10px}
+  .rev-summary{margin-bottom:8px}
+
+  /* ====================================================================
+     ===============  GIRÓN / CÚCUTA — sobriedad refinada  ==============
+     ==================================================================== */
+  .giron-tabs button{border-radius:var(--r-sm)}
+  .kpi .ic.a,.kpi .ic.b,.kpi .ic.c{border-radius:var(--r-md)}
+  .kpi .ic svg{width:22px;height:22px}
+  .feat .ic{border-radius:var(--r-md)}
+  .cucuta .tags span{border-radius:var(--r-sm)}
+
+  /* ---------- prefers-reduced-motion: todo visible, sin efectos ---------- */
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+    body.gsap-ready .reveal,body.gsap-ready .reveal-stagger>*{opacity:1!important;transform:none!important}
+    body.gsap-ready .line-mask>*{transform:none!important}
+    body.gsap-ready .clip-reveal{opacity:1!important;transform:none!important;clip-path:none!important}
+    .sm-hero img{transform:none}
+    .cursor-dot,.cursor-ring{display:none}
+  }
+  @media (hover:none){
+    .cursor-dot,.cursor-ring{display:none}
+    body.cursor-ready{cursor:auto}
+  }
+  @media(max-width:900px){
+    .home-hero{text-align:center;padding:120px 22px 132px}
+    .home-hero h1,.home-hero p{margin-left:auto;margin-right:auto}
+    .ed-row,.ed-row.flip{grid-template-columns:1fr;gap:24px}
+    .ed-row.flip .ed-media{order:0}
+    .ed-media{aspect-ratio:16/10}
+    .strip-grid{grid-template-columns:repeat(2,1fr)}
+    .strip-grid>div:nth-child(2n){border-right:0}
+    .incl-layout,.rev-editorial{grid-template-columns:1fr}
+    .incl-media{aspect-ratio:16/11;max-height:420px}
+  }
+</style>
+<!-- Motion stack (CDN). Si fallan, el sitio degrada con elegancia: todo el contenido queda visible. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js" defer></script>
+</head>
+<body>
+
+<!-- ===== Cursor magnético (desktop; se activa por JS, oculto si touch/reduced-motion) ===== -->
+<div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
+<div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+
+<!-- ===== Sprite de íconos de línea (oficio editorial, cero emojis) ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></symbol>
+    <symbol id="i-view" viewBox="0 0 24 24"><path d="M3 7l5-3 8 3 5-3v13l-5 3-8-3-5 3z"/><line x1="8" y1="4" x2="8" y2="17"/><line x1="16" y1="7" x2="16" y2="20"/></symbol>
+    <symbol id="i-sunrise" viewBox="0 0 24 24"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.2" y1="10.2" x2="5.6" y2="11.6"/><line x1="18.4" y1="11.6" x2="19.8" y2="10.2"/><line x1="2" y1="18" x2="22" y2="18"/><polyline points="8 6 12 2 16 6"/></symbol>
+    <symbol id="i-snow" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></symbol>
+    <symbol id="i-kitchen" viewBox="0 0 24 24"><path d="M6 2v7a3 3 0 0 0 6 0V2"/><line x1="9" y1="2" x2="9" y2="9"/><path d="M18 2c-1.5 1.5-1.5 4 0 6v14"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 8.5a16 16 0 0 1 20 0"/><path d="M5 12a11 11 0 0 1 14 0"/><path d="M8.5 15.5a6 6 0 0 1 7 0"/><circle cx="12" cy="19" r="1"/></symbol>
+    <symbol id="i-beach" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M12 21V9"/><path d="M12 9c-4 0-8 1-9 3 4-1 7 0 9 0 2 0 5-1 9 0-1-2-5-3-9-3z"/><circle cx="12" cy="6" r="3"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="8" r="5"/><line x1="11.5" y1="11.5" x2="21" y2="21"/><line x1="17" y1="17" x2="20" y2="14"/><line x1="14" y1="14" x2="17" y2="11"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 9h18"/><circle cx="17" cy="13" r="1"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></symbol>
+    <symbol id="i-building" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="7" x2="9" y2="7"/><line x1="15" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="9" y2="11"/><line x1="15" y1="11" x2="15" y2="11"/><line x1="10" y1="21" x2="10" y2="17"/><line x1="14" y1="21" x2="14" y2="17"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-tools" viewBox="0 0 24 24"><path d="M14 7a3 3 0 0 1 4 4l-7 7-4 1 1-4 6-8z"/><line x1="13" y1="8" x2="17" y2="12"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16" y1="16" x2="21" y2="21"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12"/><polyline points="7 11 12 16 17 11"/><line x1="5" y1="20" x2="19" y2="20"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============ TOP NAV ============ -->
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="brand" onclick="go('home')">
+      <img class="brand-logo" src="img/logo.png" alt="Nohoras Dream" />
+    </div>
+    <button class="nav-toggle" onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
+    <nav class="nav" id="nav">
+      <button data-nav="home" class="on" onclick="go('home')">Inicio</button>
+      <button data-nav="santamarta" onclick="go('santamarta')">Santa Marta</button>
+      <button data-nav="giron" onclick="go('giron')">Girón</button>
+      <button data-nav="cucuta" onclick="go('cucuta')">Cúcuta</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HOME ============ -->
+<section class="view active" id="view-home">
+  <div class="home-hero grain">
+    <span class="sunrise" id="home-sunrise" aria-hidden="true"></span>
+    <div class="wrap">
+      <span class="eyebrow reveal">Propiedades en Colombia</span>
+      <h1>
+        <span class="line-mask"><span>Lugares con alma,</span></span>
+        <span class="line-mask"><span><em>cuidados como un sueño.</em></span></span>
+      </h1>
+      <p class="reveal">Un portafolio boutique de espacios para descansar, vivir y soñar — desde el Caribe de Santa Marta hasta el corazón de Santander.</p>
+    </div>
+  </div>
+
+  <div class="props">
+    <div class="wrap">
+      <div class="editorial">
+
+        <article class="ed-row reveal" onclick="go('santamarta')" data-magnetic>
+          <div class="ed-media clip-reveal">
+            <img src="img/pareja_4.jpg" alt="Loft con vista a El Rodadero" />
+            <span class="ed-cap">El Rodadero · Santa Marta</span>
+          </div>
+          <div class="ed-body">
+            <span class="ed-idx">01 — Santa Marta</span>
+            <span class="prop-kind">Alquiler turístico</span>
+            <h3>Loft El Rodadero</h3>
+            <p>La mejor vista del sector. Un loft exclusivo para parejas y familias pequeñas, despertando frente al Caribe.</p>
+            <span class="ed-link underline-draw">Ver disponibilidad <svg class="ic-line" viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
+          </div>
+        </article>
+
+        <hr class="ed-divider"/>
+
+        <article class="ed-row flip reveal" onclick="go('giron')" data-magnetic>
+          <div class="ed-media clip-reveal">
+            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1100&q=72" alt="Edificio de apartamentos" />
+            <span class="ed-cap">Girón · Santander</span>
+          </div>
+          <div class="ed-body">
+            <span class="ed-idx">02 — Girón</span>
+            <span class="prop-kind">Arriendo residencial</span>
+            <h3>Edificio Girón</h3>
+            <p>Apartamentos en arriendo con un portal claro para pagar en línea y un panel de gestión sin enredos.</p>
+            <span class="ed-link underline-draw">Ingresar al portal <svg class="ic-line" viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
+          </div>
+        </article>
+
+        <hr class="ed-divider"/>
+
+        <article class="ed-row reveal" onclick="go('cucuta')" data-magnetic>
+          <div class="ed-media soon clip-reveal">
+            <span class="soon-mark">Próximamente</span>
+            <span class="ed-cap">Cúcuta · Norte de Santander</span>
+          </div>
+          <div class="ed-body">
+            <span class="ed-idx">03 — Cúcuta</span>
+            <span class="prop-kind">Coliving · En etapa temprana</span>
+            <h3>Nohoras Dream Cúcuta</h3>
+            <p>Un coliving que toma forma — comunidad, diseño y experiencia. Déjanos tus datos y serás de los primeros en saberlo.</p>
+            <span class="ed-link underline-draw">Quiero enterarme <svg class="ic-line" viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="home-strip grain">
+    <div class="wrap">
+      <div class="strip-head reveal">
+        <span class="eyebrow">Una sola casa, tres mundos</span>
+        <h2>Hospitalidad cuidada, de extremo a extremo.</h2>
+      </div>
+      <div class="strip-grid reveal-stagger">
+        <div><div class="num" data-count="3">3</div><div class="lbl">propiedades activas</div></div>
+        <div><div class="num" data-count="5.0" data-suffix="★">5,0★</div><div class="lbl">calificación en Airbnb</div></div>
+        <div><div class="num" data-count="100" data-suffix="%">100%</div><div class="lbl">gestión centralizada</div></div>
+        <div><div class="num">es / en</div><div class="lbl">atención bilingüe</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SANTA MARTA ============ -->
+<section class="view" id="view-santamarta">
+  <div class="sm-hero grain">
+    <img id="sm-hero-img" src="img/pareja_4.jpg" alt="Balcón con vista a El Rodadero" />
+    <div class="lang">
+      <button class="on" data-lang="es" onclick="setLang('es')">ES</button>
+      <button data-lang="en" onclick="setLang('en')">EN</button>
+    </div>
+    <div class="wrap">
+      <span class="eyebrow reveal" data-i18n="sm_eyebrow">Nohoras Dream · El Rodadero</span>
+      <h1 class="reveal" data-i18n="sm_title">Despierta con la mejor vista de <em>El Rodadero.</em></h1>
+      <p class="reveal" data-i18n="sm_sub">Un loft exclusivo, solo para ti. Atardeceres dorados, brisa del Caribe y todo el confort de un espacio pensado al detalle.</p>
+      <div class="dual-cta reveal">
+        <a class="btn btn-gold" href="https://airbnb.com/rooms/1483618072090950324" target="_blank" data-i18n="sm_cta_air">Reservar en Airbnb</a>
+        <a class="btn btn-wa-direct" id="wa-hero" href="#" target="_blank" data-i18n="sm_cta_wa">
+          <svg class="wa-ic" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.4 2 7.7L.5 31.5l8-2.1c2.2 1.2 4.8 1.9 7.5 1.9 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5zm0 28.3c-2.4 0-4.7-.6-6.7-1.8l-.5-.3-4.8 1.3 1.3-4.6-.3-.5a12.7 12.7 0 0 1-2-6.9C3.2 8.9 8.9 3.2 16 3.2S28.8 8.9 28.8 16 23.1 28.8 16 28.8zm7.2-9.5c-.4-.2-2.3-1.1-2.7-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.3 1.5-.2.3-.4.3-.8.1-.4-.2-1.7-.6-3.2-2-1.2-1-2-2.4-2.2-2.8-.2-.4 0-.6.2-.8l.6-.7c.2-.2.2-.4.4-.6.1-.3 0-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.7-.6-.6-.9-.7h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1 0 1.9 1.3 3.6 1.5 3.9.2.3 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.3-.3-.7-.5z"/></svg>
+          <span data-i18n="sm_cta_wa_txt">Reservar directo por WhatsApp</span>
+        </a>
+      </div>
+      <p class="reserve-microcopy reveal" data-i18n="sm_micro"><b>¿Prefieres trato directo?</b> Escríbenos por WhatsApp y coordinamos tu reserva con un adelanto — a veces con mejor precio que en Airbnb.</p>
+      <button class="btn btn-ghost reveal" style="margin-top:14px" onclick="document.getElementById('sm-cal').scrollIntoView({behavior:'smooth'})" data-i18n="sm_cta_avail">Ver disponibilidad</button>
+      <div class="sm-meta reveal">
+        <span data-i18n="sm_m1"><b>2</b> adultos + 2 niños</span>
+        <span data-i18n="sm_m2"><b>Vista</b> al mar</span>
+        <span data-i18n="sm_m3"><b>Check-in</b> autónomo</span>
+        <span data-i18n="sm_m4"><b>5,0★</b> · reseñas verificadas</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- gallery -->
+  <div class="block">
+    <div class="wrap">
+      <span class="eyebrow reveal">Galería</span>
+      <h2 class="section-title reveal" data-i18n="sm_gal_t">La vista que lo dice todo</h2>
+      <p class="lede reveal" data-i18n="sm_gal_p">Amaneceres, atardeceres y un loft pensado para vivir el Caribe con calma.</p>
+      <div class="gallery reveal-stagger">
+        <figure class="big" onclick="zoom(this)"><img src="img/img_4540.jpg" alt="Atardecer desde el balcón"/><span class="gcap">El balcón · Atardecer</span></figure>
+        <figure onclick="zoom(this)"><img src="img/pareja_6.jpg" alt="Cocina del loft"/><span class="gcap">Cocina equipada</span></figure>
+        <figure onclick="zoom(this)"><img src="img/pareja_1.jpg" alt="Sala con vista"/><span class="gcap">Sala · Vista al mar</span></figure>
+        <figure class="tall" onclick="zoom(this)"><img src="img/img_4523.jpg" alt="Copa al atardecer"/><span class="gcap">Hora dorada</span></figure>
+        <figure onclick="zoom(this)"><img src="img/img_4500.jpg" alt="Balcón con mesa"/><span class="gcap">Terraza · Desayuno</span></figure>
+        <figure onclick="zoom(this)"><img src="img/img_4506.jpg" alt="Sala interior"/><span class="gcap">Interior · Día</span></figure>
+      </div>
+    </div>
+  </div>
+
+  <!-- pull quote full-bleed (editorial) -->
+  <div class="pullquote grain">
+    <div class="wrap reveal">
+      <span class="mark" aria-hidden="true">&ldquo;</span>
+      <blockquote data-i18n="sm_pq">Tremenda vista. Es maravilloso, muy fresco, corre el viento y el loft está pensado al detalle.</blockquote>
+      <cite>Andrés · Huésped verificado · Airbnb</cite>
+    </div>
+  </div>
+
+  <!-- features — editorial: foto grande + lista a destiempo -->
+  <div class="block alt">
+    <div class="wrap">
+      <span class="eyebrow reveal" data-i18n="sm_inc_e">Qué incluye</span>
+      <h2 class="section-title reveal" data-i18n="sm_inc_t">Todo listo para descansar</h2>
+      <div class="incl-layout">
+        <div class="incl-media clip-reveal">
+          <img src="img/pareja_1.jpg" alt="Sala del loft con vista al mar"/>
+          <span class="gcap">El loft · Sala principal</span>
+        </div>
+        <div class="incl-list reveal-stagger">
+          <div class="incl-item"><span class="ic"><svg class="ic-line" viewBox="0 0 24 24"><use href="#i-sunrise"/></svg></span><div><h4 data-i18n="sm_f1t">Vista panorámica</h4><p data-i18n="sm_f1p">Balcón frente a la bahía de El Rodadero, la mejor del sector.</p></div></div>
+          <div class="incl-item"><span class="ic"><svg class="ic-line" viewBox="0 0 24 24"><use href="#i-snow"/></svg></span><div><h4 data-i18n="sm_f2t">Aire acondicionado</h4><p data-i18n="sm_f2p">Clima fresco en cada ambiente, ideal para el calor costero.</p></div></div>
+          <div class="incl-item"><span class="ic"><svg class="ic-line" viewBox="0 0 24 24"><use href="#i-kitchen"/></svg></span><div><h4 data-i18n="sm_f3t">Cocina equipada</h4><p data-i18n="sm_f3p">Todo para preparar tus comidas y compartir en familia.</p></div></div>
+          <div class="incl-item"><span class="ic"><svg class="ic-line" viewBox="0 0 24 24"><use href="#i-wifi"/></svg></span><div><h4 data-i18n="sm_f4t">WiFi de alta velocidad</h4><p data-i18n="sm_f4p">Perfecto para teletrabajo con vista al mar.</p></div></div>
+          <div class="incl-item"><span class="ic"><svg class="ic-line" viewBox="0 0 24 24"><use href="#i-beach"/></svg></span><div><h4 data-i18n="sm_f5t">A pasos de la playa</h4><p data-i18n="sm_f5p">Restaurantes, playa y vida nocturna a pocos minutos.</p></div></div>
+          <div class="incl-item"><span class="ic"><svg class="ic-line" viewBox="0 0 24 24"><use href="#i-key"/></svg></span><div><h4 data-i18n="sm_f6t">Check-in flexible</h4><p data-i18n="sm_f6p">Llegada autónoma y manilla de seguridad al ingresar.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- calendar + quoter -->
+  <div class="block" id="sm-cal">
+    <div class="wrap">
+      <span class="eyebrow reveal" data-i18n="sm_cal_e">Disponibilidad y precios</span>
+      <h2 class="section-title reveal" data-i18n="sm_cal_t">Elige tus fechas</h2>
+      <p class="lede reveal" data-i18n="sm_cal_p">Disponibilidad sincronizada con Airbnb. Toca una fecha de entrada y otra de salida para cotizar.</p>
+      <div class="booking-layout reveal">
+        <!-- calendar -->
+        <div class="cal">
+          <div class="cal-head">
+            <h3 id="cal-month">Julio 2026</h3>
+            <div class="cal-nav">
+              <button onclick="moveMonth(-1)">‹</button>
+              <button onclick="moveMonth(1)">›</button>
+            </div>
+          </div>
+          <div class="cal-dow"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+          <div class="cal-grid" id="cal-grid"></div>
+          <div class="cal-legend">
+            <span><i style="background:rgba(62,124,177,.2)"></i> Disponible</span>
+            <span><i style="background:rgba(234,167,22,.45)"></i> Temporada alta</span>
+            <span><i style="background:#e6e6e6"></i> No disponible</span>
+            <span><i style="background:var(--nd-blue)"></i> Tu selección</span>
+          </div>
+        </div>
+
+        <!-- booking / quoter card -->
+        <div class="book-card">
+          <div class="from"><b id="q-from-price">$200.000</b> <small data-i18n="sm_pernight">/ noche · desde</small></div>
+          <div class="rating">★ 5,0 · <span style="color:var(--nd-muted)">reseñas verificadas</span></div>
+          <div class="field-row">
+            <div class="field"><label data-i18n="sm_checkin">Entrada</label><input type="text" id="q-in" value="12 jul" readonly/></div>
+            <div class="field"><label data-i18n="sm_checkout">Salida</label><input type="text" id="q-out" value="16 jul" readonly/></div>
+          </div>
+          <div class="field">
+            <label data-i18n="sm_guests">Huéspedes</label>
+            <select id="q-guests" onchange="quote()">
+              <option>2 adultos</option>
+              <option>2 adultos · 1 niño</option>
+              <option>2 adultos · 2 niños</option>
+            </select>
+          </div>
+          <div class="breakdown" id="q-breakdown"><!-- filled by JS --></div>
+          <div class="book-cta">
+            <a class="btn btn-gold btn-block" href="https://airbnb.com/rooms/1483618072090950324" target="_blank" data-i18n="sm_cta_air2">Reservar en Airbnb</a>
+            <a class="btn btn-wa-direct btn-block" id="wa-quoter" href="#" target="_blank">
+              <svg class="wa-ic" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.4 2 7.7L.5 31.5l8-2.1c2.2 1.2 4.8 1.9 7.5 1.9 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5zm0 28.3c-2.4 0-4.7-.6-6.7-1.8l-.5-.3-4.8 1.3 1.3-4.6-.3-.5a12.7 12.7 0 0 1-2-6.9C3.2 8.9 8.9 3.2 16 3.2S28.8 8.9 28.8 16 23.1 28.8 16 28.8zm7.2-9.5c-.4-.2-2.3-1.1-2.7-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.3 1.5-.2.3-.4.3-.8.1-.4-.2-1.7-.6-3.2-2-1.2-1-2-2.4-2.2-2.8-.2-.4 0-.6.2-.8l.6-.7c.2-.2.2-.4.4-.6.1-.3 0-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.7-.6-.6-.9-.7h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1 0 1.9 1.3 3.6 1.5 3.9.2.3 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.3-.3-.7-.5z"/></svg>
+              <span data-i18n="sm_cta_wa_txt2">Reservar directo por WhatsApp</span>
+            </a>
+          </div>
+          <p class="reserve-microcopy" data-i18n="sm_micro2"><b>¿Prefieres trato directo?</b> Por WhatsApp coordinamos con un adelanto — a veces con mejor precio que en Airbnb. Tus fechas y total van en el mensaje.</p>
+          <p class="note" data-i18n="sm_note">No se cobra aún. El pago se realiza en Airbnb o, si reservas directo, con un adelanto por WhatsApp.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- reviews — editorial: una destacada + columna de breves -->
+  <div class="block alt">
+    <div class="wrap">
+      <span class="eyebrow reveal">Reseñas</span>
+      <h2 class="section-title reveal" data-i18n="sm_rev_t">Lo que dicen los huéspedes</h2>
+      <div class="rev-summary reveal">
+        <div class="avg">
+          <span class="score">5,0</span>
+          <span class="stars">★★★★★</span>
+          <span class="count">· reseñas reales verificadas en Airbnb</span>
+        </div>
+      </div>
+
+      <!-- Reseñas REALES transcritas de Airbnb. La primera es la destacada (.rev-feature); el resto van en .rev-list como .rev-item. -->
+      <div class="rev-editorial">
+        <div class="rev-feature reveal">
+          <div class="stars">★★★★★</div>
+          <blockquote>Tremenda vista. Es maravilloso, muy fresco, corre el viento y el loft es muy bonito y equipado. Lo recomiendo en un 100%.</blockquote>
+          <div class="who"><div class="av">A</div><div><b>Andrés</b><small>Sept 2025 · Airbnb</small></div></div>
+        </div>
+
+        <div class="rev-list reveal-stagger">
+          <div class="rev-item">
+            <div class="stars">★★★★★</div>
+            <p>"El apto está hermoso, una vista increíble, muy limpio y equipado al 100%. Sus anfitriones son excelentes, con una calidad humana increíble."</p>
+            <div class="who"><div class="av">J</div><div><b>Johanna</b><small>Ago 2025</small></div></div>
+          </div>
+          <div class="rev-item">
+            <div class="stars">★★★★★</div>
+            <p>"Excelente ubicación y vista hacia El Rodadero. El apartamento muy cómodo y limpio."</p>
+            <div class="who"><div class="av">JA</div><div><b>Jairo Andrés</b><small>Nov 2025</small></div></div>
+          </div>
+          <div class="rev-item">
+            <div class="stars">★★★★★</div>
+            <p>"Excelente ubicación, el lugar muy limpio, comodidad, buena comunicación y fácil el acceso."</p>
+            <div class="who"><div class="av">S</div><div><b>Sergio</b><small>Nov 2025</small></div></div>
+          </div>
+          <div class="rev-item">
+            <div class="stars">★★★★★</div>
+            <p>"Great view."</p>
+            <div class="who"><div class="av">LD</div><div><b>Luis Daniel</b><small>Ene 2026</small></div></div>
+          </div>
+        </div>
+      </div>
+      <!-- /Reseñas reales -->
+
+      <div class="rev-footer reveal">
+        <a class="btn btn-outline" href="https://airbnb.com/rooms/1483618072090950324" target="_blank" data-i18n="sm_rev_all">Ver todas las reseñas en Airbnb <svg class="ic-line" viewBox="0 0 24 24"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GIRON ============ -->
+<section class="view" id="view-giron">
+  <div class="giron-intro grain">
+    <div class="wrap">
+      <span class="eyebrow reveal">Nohoras Dream · Girón, Santander</span>
+      <h1 class="reveal">Tu arriendo, sin filas y sin enredos.</h1>
+      <p class="reveal">El portal donde ves tu estado del mes, pagas en línea y guardas tus comprobantes. Y para la administración, el control de todo el edificio de un vistazo.</p>
+    </div>
+  </div>
+
+  <div class="giron-tabs">
+    <div class="wrap">
+      <span class="gt-label">Demo de roles</span>
+      <button class="on" data-sub="portal" onclick="subGiron('portal')"><svg class="ic-line" viewBox="0 0 24 24" style="width:15px;height:15px;vertical-align:-2px;margin-right:6px"><use href="#i-user"/></svg>Portal arrendatario</button>
+      <button data-sub="admin" onclick="subGiron('admin')"><svg class="ic-line" viewBox="0 0 24 24" style="width:15px;height:15px;vertical-align:-2px;margin-right:6px"><use href="#i-tools"/></svg>Dashboard administrador</button>
+    </div>
+  </div>
+
+  <!-- PORTAL -->
+  <div class="subview active" id="sub-portal">
+    <div class="block">
+      <div class="wrap">
+        <div class="portal-head">
+          <div>
+            <h2>Hola, Carolina</h2>
+            <p>Apartamento 302 · Edificio Nohoras Dream Girón</p>
+          </div>
+          <div class="avatar-chip">
+            <span class="av">CR</span>
+            <span><b>Carolina Rincón</b><small>Arrendataria</small></span>
+          </div>
+        </div>
+
+        <div class="demo-toggle">
+          <span style="font-size:.78rem;color:var(--nd-muted);align-self:center;margin-right:4px">Ver estado:</span>
+          <button class="on" id="dt-ok" onclick="setPortalState('ok')">Al día</button>
+          <button id="dt-mora" onclick="setPortalState('mora')">En mora (demo)</button>
+        </div>
+
+        <div class="portal-grid" style="margin-top:18px">
+          <!-- status card -->
+          <div class="status-card" id="status-card">
+            <div class="st-row">
+              <div>
+                <span class="label" id="sc-label">Tu arriendo de junio</span>
+                <h2 id="sc-title">Estás al día</h2>
+                <div class="sub" id="sc-sub">Pagaste el 3 de junio. ¡Gracias!</div>
+              </div>
+              <div class="amount">
+                <div class="big" id="sc-amount">$0</div>
+                <small id="sc-amount-lbl">por pagar</small>
+              </div>
+            </div>
+            <button class="btn btn-gold" id="sc-btn" style="opacity:.55;pointer-events:none">Pagar ahora</button>
+            <div class="meta-line" id="sc-meta">Próximo cobro: 1 de julio · $850.000</div>
+          </div>
+
+          <!-- contract card -->
+          <div class="info-card">
+            <h3>Mi contrato</h3>
+            <div class="kv"><span>Apartamento</span><b>302</b></div>
+            <div class="kv"><span>Valor mensual</span><b>$850.000</b></div>
+            <div class="kv"><span>Día de pago</span><b>1 de cada mes</b></div>
+            <div class="kv"><span>Inicio de contrato</span><b>15 ene 2026</b></div>
+            <div class="kv"><span>Estado</span><span class="badge badge-ok"><span class="dot"></span>Activo</span></div>
+          </div>
+        </div>
+
+        <!-- payment history -->
+        <div class="panel">
+          <div class="panel-head"><h3>Historial de pagos</h3></div>
+          <table>
+            <thead><tr><th>Periodo</th><th>Monto</th><th>Método</th><th>Estado</th><th>Comprobante</th></tr></thead>
+            <tbody>
+              <tr><td><b>Junio 2026</b></td><td>$850.000</td><td>PSE</td><td><span class="badge badge-ok"><span class="dot"></span>Pagado</span></td><td><a class="link-btn" onclick="alert('Demo: descargaría el comprobante PDF.')"><svg class="ic-line" viewBox="0 0 24 24" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px"><use href="#i-download"/></svg>PDF</a></td></tr>
+              <tr><td><b>Mayo 2026</b></td><td>$850.000</td><td>Nequi</td><td><span class="badge badge-ok"><span class="dot"></span>Pagado</span></td><td><a class="link-btn" onclick="alert('Demo: descargaría el comprobante PDF.')"><svg class="ic-line" viewBox="0 0 24 24" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px"><use href="#i-download"/></svg>PDF</a></td></tr>
+              <tr><td><b>Abril 2026</b></td><td>$850.000</td><td>Tarjeta</td><td><span class="badge badge-ok"><span class="dot"></span>Pagado</span></td><td><a class="link-btn" onclick="alert('Demo: descargaría el comprobante PDF.')"><svg class="ic-line" viewBox="0 0 24 24" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px"><use href="#i-download"/></svg>PDF</a></td></tr>
+              <tr><td><b>Marzo 2026</b></td><td>$850.000</td><td>Efectivo (conciliado)</td><td><span class="badge badge-ok"><span class="dot"></span>Pagado</span></td><td><a class="link-btn" onclick="alert('Demo: descargaría el comprobante PDF.')"><svg class="ic-line" viewBox="0 0 24 24" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px"><use href="#i-download"/></svg>PDF</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="subview" id="sub-admin">
+    <div class="block">
+      <div class="wrap">
+        <div class="portal-head">
+          <div>
+            <h2>Edificio Girón · Junio 2026</h2>
+            <p>Resumen de pagos y ocupación</p>
+          </div>
+          <div class="avatar-chip">
+            <span class="av" style="background:var(--nd-gold);color:var(--nd-deep)">F</span>
+            <span><b>Felipe (Owner)</b><small>Administrador</small></span>
+          </div>
+        </div>
+
+        <div class="kpi-grid reveal-stagger" style="margin-top:6px">
+          <div class="kpi"><div class="ic a"><svg class="ic-line" viewBox="0 0 24 24"><use href="#i-wallet"/></svg></div><div class="v">$5.950.000</div><div class="l">Recaudado en junio</div><span class="trend">+8%</span></div>
+          <div class="kpi"><div class="ic b"><svg class="ic-line" viewBox="0 0 24 24"><use href="#i-check"/></svg></div><div class="v">75%</div><div class="l">Arrendatarios al día (6 de 8)</div></div>
+          <div class="kpi"><div class="ic c"><svg class="ic-line" viewBox="0 0 24 24"><use href="#i-building"/></svg></div><div class="v">8 / 9</div><div class="l">Apartamentos ocupados</div></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Arrendatarios</h3>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              <div class="search"><svg class="ic-line" viewBox="0 0 24 24" style="width:15px;height:15px;color:var(--nd-muted)"><use href="#i-search"/></svg><input type="text" placeholder="Buscar..." oninput="filterTable(this.value)"/></div>
+              <button class="btn btn-primary btn-sm" onclick="alert('Demo: abriría el formulario de registro de pago manual.')">+ Registrar pago</button>
+            </div>
+          </div>
+          <div style="padding:14px 24px 0">
+            <div class="filters">
+              <button class="on" data-f="all" onclick="setFilter('all')">Todos</button>
+              <button data-f="ok" onclick="setFilter('ok')">Al día</button>
+              <button data-f="warn" onclick="setFilter('warn')">Por vencer</button>
+              <button data-f="danger" onclick="setFilter('danger')">En mora</button>
+            </div>
+          </div>
+          <table id="admin-table">
+            <thead><tr><th>Arrendatario</th><th>Apto</th><th>Valor</th><th>Día pago</th><th>Estado</th><th>Último pago</th><th></th></tr></thead>
+            <tbody>
+              <tr data-state="ok"><td><div class="name"><span class="av">CR</span><b>Carolina Rincón</b></div></td><td>302</td><td>$850.000</td><td>1</td><td><span class="badge badge-ok"><span class="dot"></span>Al día</span></td><td>3 jun</td><td><a class="link-btn" onclick="alert('Demo: abriría el detalle del arrendatario.')">Ver</a></td></tr>
+              <tr data-state="ok"><td><div class="name"><span class="av">DM</span><b>Diego Mora</b></div></td><td>201</td><td>$720.000</td><td>5</td><td><span class="badge badge-ok"><span class="dot"></span>Al día</span></td><td>4 jun</td><td><a class="link-btn" onclick="alert('Demo: abriría el detalle del arrendatario.')">Ver</a></td></tr>
+              <tr data-state="warn"><td><div class="name"><span class="av">LV</span><b>Laura Vega</b></div></td><td>305</td><td>$780.000</td><td>20</td><td><span class="badge badge-warn"><span class="dot"></span>Por vencer</span></td><td>21 may</td><td><a class="link-btn" onclick="alert('Demo: enviaría recordatorio por WhatsApp + email.')">Recordar</a></td></tr>
+              <tr data-state="ok"><td><div class="name"><span class="av">JT</span><b>Jorge Téllez</b></div></td><td>101</td><td>$700.000</td><td>1</td><td><span class="badge badge-ok"><span class="dot"></span>Al día</span></td><td>2 jun</td><td><a class="link-btn" onclick="alert('Demo: abriría el detalle del arrendatario.')">Ver</a></td></tr>
+              <tr data-state="danger"><td><div class="name"><span class="av">MP</span><b>Marcela Pinto</b></div></td><td>402</td><td>$900.000</td><td>3</td><td><span class="badge badge-danger"><span class="dot"></span>En mora</span></td><td>5 may</td><td><a class="link-btn" onclick="alert('Demo: enviaría aviso de mora por WhatsApp + email.')">Cobrar</a></td></tr>
+              <tr data-state="ok"><td><div class="name"><span class="av">AR</span><b>Andrés Ruiz</b></div></td><td>203</td><td>$720.000</td><td>10</td><td><span class="badge badge-ok"><span class="dot"></span>Al día</span></td><td>9 jun</td><td><a class="link-btn" onclick="alert('Demo: abriría el detalle del arrendatario.')">Ver</a></td></tr>
+              <tr data-state="ok"><td><div class="name"><span class="av">SC</span><b>Sara Cárdenas</b></div></td><td>104</td><td>$700.000</td><td>1</td><td><span class="badge badge-ok"><span class="dot"></span>Al día</span></td><td>1 jun</td><td><a class="link-btn" onclick="alert('Demo: abriría el detalle del arrendatario.')">Ver</a></td></tr>
+              <tr data-state="danger"><td><div class="name"><span class="av">NB</span><b>Nicolás Bravo</b></div></td><td>301</td><td>$850.000</td><td>5</td><td><span class="badge badge-danger"><span class="dot"></span>En mora</span></td><td>6 abr</td><td><a class="link-btn" onclick="alert('Demo: enviaría aviso de mora por WhatsApp + email.')">Cobrar</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CUCUTA ============ -->
+<section class="view" id="view-cucuta">
+  <div class="cucuta">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow reveal">Nohoras Dream · Cúcuta</span>
+        <h1 class="reveal">Un coliving está <em>tomando forma.</em></h1>
+        <p class="lede2 reveal">Soñamos con un coliving Nohoras Dream en Cúcuta: comunidad, diseño y experiencia bajo un mismo techo. Apenas empieza — todavía estamos asegurando el lote. Sin prisa, pero con propósito. Sé de los primeros en conocerlo cuando llegue su momento.</p>
+        <div class="tags reveal">
+          <span>Coliving</span>
+          <span>Comunidad · Diseño · Experiencia</span>
+          <span>En etapa temprana</span>
+        </div>
+      </div>
+      <div class="interest reveal">
+        <div id="interest-form">
+          <h3>Sé de los primeros</h3>
+          <p>Aún no hay fechas. Déjanos tus datos y te escribiremos en cuanto el coliving empiece a tomar forma.</p>
+          <div class="ifield"><label>Nombre</label><input type="text" placeholder="Tu nombre"/></div>
+          <div class="ifield"><label>Correo</label><input type="email" placeholder="tucorreo@ejemplo.com"/></div>
+          <div class="ifield"><label>WhatsApp</label><input type="tel" placeholder="+57 ..."/></div>
+          <div class="ifield"><label>Me interesa el coliving para</label>
+            <select><option>Vivir en comunidad</option><option>Estadías medias o largas</option><option>Invertir en el proyecto</option><option>Solo informarme</option></select>
+          </div>
+          <button class="btn btn-gold btn-block" style="margin-top:8px" onclick="sendInterest()">Quiero saber cuando avance</button>
+        </div>
+        <div class="ok-msg" id="interest-ok">
+          <div class="check"><svg class="ic-line" viewBox="0 0 24 24" style="width:26px;height:26px;stroke-width:2"><use href="#i-check"/></svg></div>
+          <div class="big">¡Quedaste en la lista!</div>
+          <p>Te escribiremos en cuanto el coliving de Cúcuta dé sus primeros pasos. Sin spam, solo lo importante.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="f-top"></div>
+  <div class="wrap f-inner">
+    <div class="brand">
+      <!-- Logo real: aparece automáticamente cuando exista el PNG; si no, cae al lockup textual -->
+      <img class="f-logo" src="img/logo-white.png" alt="Nohoras Dream"
+           onerror="this.onerror=null;this.style.display='none';document.getElementById('f-fallback').style.display='flex'" />
+      <span id="f-fallback" style="display:flex;align-items:center;gap:11px">
+        <svg class="iso" style="width:34px;height:34px" viewBox="0 0 64 64" aria-hidden="true">
+          <circle class="sun" cx="32" cy="29" r="9"/>
+          <g class="ray">
+            <line x1="32" y1="9" x2="32" y2="14"/>
+            <line x1="16.5" y1="14.5" x2="19.5" y2="18.5"/>
+            <line x1="47.5" y1="14.5" x2="44.5" y2="18.5"/>
+            <line x1="9" y1="29" x2="14" y2="29"/>
+            <line x1="50" y1="29" x2="55" y2="29"/>
+          </g>
+          <path d="M2 42c6 0 6-4 12-4s6 4 12 4 6-4 12-4 6 4 12 4 6-4 8-4v6c-2 0-2 4-8 4s-6-4-12-4-6 4-12 4-6-4-12-4-6 4-12 4z" fill="#7FB5DD"/>
+          <path d="M2 50c6 0 6-3 12-3s6 3 12 3 6-3 12-3 6 3 12 3 6-3 8-3v8H2z" fill="#3E7CB1"/>
+          <path d="M2 56c6 0 6-2 12-2s6 2 12 2 6-2 12-2 6 2 12 2 6-2 8-2v6H2z" fill="#E8EEF6"/>
+        </svg>
+        <span class="lockup">
+          <span class="wordmark">NOHORAS <span class="dream">DREAM</span></span>
+          <small>Portafolio · Colombia</small>
+        </span>
+      </span>
+    </div>
+    <div>@nohorasdream · Santa Marta · Girón · Cúcuta</div>
+    <div style="opacity:.6">Prototipo UX · datos de ejemplo</div>
+  </div>
+</footer>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('on')">
+  <span class="x">×</span>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+/* ---------- COP format ---------- */
+const COP = n => '$' + n.toLocaleString('es-CO');
+
+/* ---------- View navigation ---------- */
+function go(view){
+  const target = document.getElementById('view-'+view);
+  const current = document.querySelector('.view.active');
+  document.querySelectorAll('.nav button[data-nav]').forEach(b=>{
+    b.classList.toggle('on', b.dataset.nav===view);
+  });
+  document.getElementById('nav').classList.remove('open');
+
+  // transición suave entre vistas (cortina por opacidad, no corte seco)
+  const swap = ()=>{
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    target.classList.add('active');
+    window.scrollTo({top:0,behavior:'instant'});
+    if(window.lenis) window.lenis.scrollTo(0,{immediate:true});
+    if(window.__refreshMotion) window.__refreshMotion();
+  };
+
+  if(window.gsap && current && current!==target){
+    window.gsap.to(current,{opacity:0,duration:.28,ease:'power2.out',onComplete:()=>{
+      current.style.opacity='';      // restaura la vista saliente para futuros usos
+      swap();
+      window.gsap.fromTo(target,{opacity:0},{opacity:1,duration:.55,ease:'power2.out',
+        clearProps:'opacity'});      // gsap controla la entrada y luego limpia el inline
+    }});
+  } else {
+    swap();
+  }
+}
+
+/* ---------- Giron subviews ---------- */
+function subGiron(sub){
+  document.querySelectorAll('.subview').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById('sub-'+sub);
+  el.classList.add('active');
+  document.querySelectorAll('.giron-tabs button[data-sub]').forEach(b=>{
+    b.classList.toggle('on', b.dataset.sub===sub);
+  });
+  if(window.gsap){ window.gsap.fromTo(el,{opacity:0,y:10},{opacity:1,y:0,duration:.45,ease:'power2.out'}); }
+  if(window.__refreshMotion) window.__refreshMotion();
+}
+
+/* ---------- Portal state demo ---------- */
+function setPortalState(state){
+  const card = document.getElementById('status-card');
+  const okBtn = document.getElementById('dt-ok');
+  const moraBtn = document.getElementById('dt-mora');
+  okBtn.classList.toggle('on', state==='ok');
+  moraBtn.classList.toggle('on', state==='mora');
+  const btn = document.getElementById('sc-btn');
+  if(state==='ok'){
+    card.classList.remove('mora');
+    document.getElementById('sc-label').textContent = 'Tu arriendo de junio';
+    document.getElementById('sc-title').textContent = 'Estás al día';
+    document.getElementById('sc-sub').textContent = 'Pagaste el 3 de junio. ¡Gracias!';
+    document.getElementById('sc-amount').textContent = '$0';
+    document.getElementById('sc-amount-lbl').textContent = 'por pagar';
+    document.getElementById('sc-meta').textContent = 'Próximo cobro: 1 de julio · $850.000';
+    btn.style.opacity = '.55'; btn.style.pointerEvents = 'none';
+    btn.textContent = 'Pagar ahora';
+  } else {
+    card.classList.add('mora');
+    document.getElementById('sc-label').textContent = 'Arriendo de junio · vencido';
+    document.getElementById('sc-title').textContent = 'Tienes un pago pendiente';
+    document.getElementById('sc-sub').textContent = 'Venció el 1 de junio. Ponte al día para evitar recargos.';
+    document.getElementById('sc-amount').textContent = '$850.000';
+    document.getElementById('sc-amount-lbl').textContent = 'por pagar';
+    document.getElementById('sc-meta').textContent = 'Vencido hace 16 días';
+    btn.style.opacity = '1'; btn.style.pointerEvents = 'auto';
+    btn.textContent = 'Pagar $850.000 ahora';
+    btn.onclick = ()=>alert('Demo: abriría el checkout de Wompi (PSE, tarjeta o Nequi).');
+  }
+}
+
+/* ---------- Admin filters & search ---------- */
+function setFilter(f){
+  document.querySelectorAll('.filters button').forEach(b=>b.classList.toggle('on', b.dataset.f===f));
+  document.querySelectorAll('#admin-table tbody tr').forEach(tr=>{
+    tr.style.display = (f==='all' || tr.dataset.state===f) ? '' : 'none';
+  });
+}
+function filterTable(q){
+  q = q.toLowerCase();
+  document.querySelectorAll('#admin-table tbody tr').forEach(tr=>{
+    tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+/* ---------- Lightbox ---------- */
+function zoom(fig){
+  const img = fig.querySelector('img');
+  document.getElementById('lightbox-img').src = img.src;
+  document.getElementById('lightbox').classList.add('on');
+}
+
+/* ---------- Santa Marta CALENDAR ---------- */
+/* Pricing model from docs/01 */
+const BASE = 200000, VAC = 350000;
+let calYear = 2026, calMonth = 6; // July (0-indexed)
+const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+// demo blocked dates (Airbnb iCal would feed these)
+const BLOCKED = {6:[5,6,7,18,19,25,26]}; // July blocked days
+let selStart=null, selEnd=null;
+
+function priceFor(year, month, day){
+  // jun 15 – jul 20 vacaciones alta
+  if((month===5 && day>=15) || (month===6 && day<=20)) return VAC;
+  return BASE;
+}
+function isBlocked(month, day){ return (BLOCKED[month]||[]).includes(day); }
+
+function renderCalendar(){
+  document.getElementById('cal-month').textContent = MONTHS[calMonth]+' '+calYear;
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML='';
+  const first = new Date(calYear, calMonth, 1);
+  let startDow = (first.getDay()+6)%7; // Monday-first
+  const days = new Date(calYear, calMonth+1, 0).getDate();
+  for(let i=0;i<startDow;i++){ const e=document.createElement('div'); e.className='day empty'; grid.appendChild(e); }
+  for(let d=1; d<=days; d++){
+    const cell = document.createElement('div');
+    const blocked = isBlocked(calMonth,d);
+    const price = priceFor(calYear,calMonth,d);
+    const high = price>BASE;
+    cell.className = 'day ' + (blocked?'blocked':(high?'avail high':'avail'));
+    cell.innerHTML = blocked ? d : d + '<span class="pr">'+(price/1000)+'k</span>';
+    if(!blocked){ cell.onclick = ()=>pickDay(d); }
+    cell.dataset.day = d;
+    grid.appendChild(cell);
+  }
+  paintSelection();
+}
+function moveMonth(dir){
+  calMonth += dir;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  selStart=selEnd=null;
+  renderCalendar();
+}
+function pickDay(d){
+  if(selStart===null || selEnd!==null){ selStart=d; selEnd=null; }
+  else if(d>selStart){ selEnd=d; updateQuoterDates(); }
+  else { selStart=d; }
+  paintSelection();
+}
+function paintSelection(){
+  document.querySelectorAll('#cal-grid .day').forEach(c=>{
+    const d = parseInt(c.dataset.day);
+    c.classList.remove('sel');
+    if(c.classList.contains('empty')||c.classList.contains('blocked')) return;
+    if(selStart && selEnd){ if(d>=selStart && d<=selEnd) c.classList.add('sel'); }
+    else if(d===selStart) c.classList.add('sel');
+  });
+}
+function updateQuoterDates(){
+  if(selStart&&selEnd){
+    document.getElementById('q-in').value = selStart+' '+MONTHS[calMonth].slice(0,3).toLowerCase();
+    document.getElementById('q-out').value = selEnd+' '+MONTHS[calMonth].slice(0,3).toLowerCase();
+  }
+  quote();
+}
+
+/* ---------- WhatsApp directo (número placeholder) ---------- */
+const WA_NUMBER = '573022332388'; // Nohoras Dream (mismo número del bot de WhatsApp)
+const AIRBNB_URL = 'https://airbnb.com/rooms/1483618072090950324';
+/* Guarda el estado de la última cotización para armar el mensaje de WhatsApp */
+let lastQuote = { inLabel:'12 jul', outLabel:'16 jul', nights:4, guests:'2 adultos', total:0 };
+
+function buildWhatsAppLink(){
+  const q = lastQuote;
+  const lines = [
+    'Hola Nohoras Dream 👋 Quiero reservar el Loft El Rodadero (Santa Marta) directo por aquí.',
+    '',
+    '📅 Entrada: ' + q.inLabel,
+    '📅 Salida: ' + q.outLabel,
+    '🌙 Noches: ' + q.nights,
+    '👥 Huéspedes: ' + q.guests,
+    '💰 Total cotizado: ' + (q.total ? COP(q.total) : 'por confirmar'),
+    '',
+    '¿Está disponible? Quedo atento para coordinar el adelanto.'
+  ];
+  return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(lines.join('\n'));
+}
+function refreshWhatsAppLinks(){
+  const href = buildWhatsAppLink();
+  const hero = document.getElementById('wa-hero');
+  const quoter = document.getElementById('wa-quoter');
+  if(hero) hero.href = href;
+  if(quoter) quoter.href = href;
+}
+
+/* ---------- Quoter ---------- */
+function quote(){
+  // determine nights from selection (default 12->16 jul = 4 nights base)
+  let inDay = selStart || 12, outDay = selEnd || 16;
+  let nights = Math.max(1, outDay - inDay);
+  let subtotal = 0, hasHigh=false;
+  for(let d=inDay; d<outDay; d++){
+    const p = priceFor(calYear, calMonth, d);
+    if(p>BASE) hasHigh=true;
+    subtotal += p;
+  }
+  if(nights<1){ subtotal = BASE*4; nights=4; }
+  const avg = Math.round(subtotal/nights);
+  const cleaning = 60000;
+  const discount = nights>=7 ? Math.round(subtotal*0.10) : 0;
+  const total = subtotal - discount + cleaning;
+
+  document.getElementById('q-from-price').textContent = COP(hasHigh?VAC:BASE);
+
+  let html = '';
+  html += `<div class="row"><span class="u" title="Promedio por noche según temporada">${COP(avg)} × ${nights} noche${nights>1?'s':''}</span><span>${COP(subtotal)}</span></div>`;
+  if(discount>0) html += `<div class="row disc"><span>Descuento 7+ noches (10%)</span><span>−${COP(discount)}</span></div>`;
+  html += `<div class="row"><span class="u" title="Se paga en sitio a la Señora Deicy">Aseo y lavandería</span><span>${COP(cleaning)}</span></div>`;
+  html += `<div class="total"><span>Total estimado</span><span>${COP(total)}</span></div>`;
+  document.getElementById('q-breakdown').innerHTML = html;
+
+  // Guardar cotización y refrescar los enlaces de WhatsApp (fechas + total prellenados)
+  lastQuote = {
+    inLabel: document.getElementById('q-in').value,
+    outLabel: document.getElementById('q-out').value,
+    nights: nights,
+    guests: document.getElementById('q-guests').value,
+    total: total
+  };
+  refreshWhatsAppLinks();
+}
+
+/* ---------- Bilingual toggle (demo) ---------- */
+const I18N = {
+  en:{
+    sm_eyebrow:'Nohoras Dream · El Rodadero',
+    sm_title:'Wake up to the best view of <em>El Rodadero.</em>',
+    sm_sub:'An exclusive loft, just for you. Golden sunsets, Caribbean breeze and every comfort of a thoughtfully designed space.',
+    sm_cta_air:'Book on Airbnb', sm_cta_avail:'Check availability',
+    sm_cta_wa_txt:'Book direct on WhatsApp', sm_cta_wa_txt2:'Book direct on WhatsApp',
+    sm_cta_air2:'Book on Airbnb',
+    sm_micro:'<b>Prefer a direct deal?</b> Message us on WhatsApp and we’ll arrange your booking with a deposit — sometimes at a better price than Airbnb.',
+    sm_micro2:'<b>Prefer a direct deal?</b> On WhatsApp we arrange it with a deposit — sometimes cheaper than Airbnb. Your dates and total are included in the message.',
+    sm_m1:'<b>2</b> adults + 2 kids', sm_m2:'<b>Ocean</b> view', sm_m3:'<b>Self</b> check-in', sm_m4:'<b>5,0★</b> · verified reviews',
+    sm_gal_t:'The view says it all', sm_gal_p:'Sunrises, sunsets and a loft made to enjoy the Caribbean slowly.',
+    sm_pq:'An incredible view. It’s wonderful, breezy and cool, and the loft is thought through to the last detail.',
+    sm_inc_e:'What’s included', sm_inc_t:'Everything ready to relax',
+    sm_f1t:'Panoramic view', sm_f1p:'Balcony over El Rodadero bay — the best in the area.',
+    sm_f2t:'Air conditioning', sm_f2p:'Cool air in every room, perfect for the coastal heat.',
+    sm_f3t:'Equipped kitchen', sm_f3p:'Everything to cook and share with family.',
+    sm_f4t:'High-speed WiFi', sm_f4p:'Perfect for remote work with an ocean view.',
+    sm_f5t:'Steps from the beach', sm_f5p:'Restaurants, beach and nightlife just minutes away.',
+    sm_f6t:'Flexible check-in', sm_f6p:'Self check-in and a security wristband on arrival.',
+    sm_cal_e:'Availability & prices', sm_cal_t:'Pick your dates',
+    sm_cal_p:'Availability synced with Airbnb. Tap a check-in and check-out date to get a quote.',
+    sm_pernight:'/ night · from', sm_checkin:'Check-in', sm_checkout:'Check-out', sm_guests:'Guests',
+    sm_note:'No charge yet. Payment is completed on Airbnb or, if you book direct, with a deposit via WhatsApp.',
+    sm_rev_t:'What guests say',
+    sm_rev_count:'· 37 verified reviews on Airbnb',
+    sm_rev_all:'See all reviews on Airbnb →',
+    sm_rev1:'"The view of El Rodadero is out of this world. Waking up to that sea was the highlight of our trip. Spotless, and Felipe was super attentive."',
+    sm_rev2:'"Beautiful loft, perfectly located, steps from the beach. Communication before and during the stay was perfect. We’d come back instantly."',
+    sm_rev3:'"Perfect for a couple’s getaway. Sunset from the balcony with a glass of wine was unforgettable. Self check-in made everything easy."',
+    sm_rev4:'"We traveled with two kids and the space was ideal: equipped kitchen, A/C and the best view in the area. The little ones loved the sea right in front."',
+    sm_rev5:'"Spotless apartment with an incredible ocean view. Right in the heart of El Rodadero, close to everything. Self check-in was smooth. Highly recommend!"',
+    sm_rev6:'"A gorgeous loft. The Caribbean breeze on the balcony and the sunset are priceless. Clean, comfortable and fully equipped. We’ll definitely be back."'
+  }
+};
+let ES = {}; // captured from DOM on load
+function setLang(lang){
+  document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on', b.dataset.lang===lang));
+  const dict = lang==='en' ? I18N.en : ES;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.dataset.i18n;
+    if(dict[k]!==undefined) el.innerHTML = dict[k];
+  });
+}
+
+/* ---------- Cúcuta interest ---------- */
+function sendInterest(){
+  document.getElementById('interest-form').style.display='none';
+  document.getElementById('interest-ok').style.display='block';
+}
+
+/* ---------- Init lógica ---------- */
+document.querySelectorAll('[data-i18n]').forEach(el=>{ ES[el.dataset.i18n] = el.innerHTML; });
+renderCalendar();
+quote();
+
+/* ====================================================================
+   ===============  CAPA PREMIUM — sistema de movimiento  =============
+   Lenis + GSAP + ScrollTrigger. Degrada con elegancia:
+   - Si el CDN/JS no carga -> el contenido ya es visible (reposo).
+   - prefers-reduced-motion -> no se activa NADA (solo nav-solid básico).
+   - touch / sin puntero fino -> sin cursor custom, parallax desactivado.
+   ==================================================================== */
+(function premiumMotion(){
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine   = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+  /* --- Nav transparente -> sólida (independiente de GSAP, siempre liviano) --- */
+  const topbar = document.querySelector('.topbar');
+  function onScrollNav(){
+    if(!topbar) return;
+    if(window.scrollY > 40) topbar.classList.add('solid');
+    else topbar.classList.remove('solid');
+  }
+  window.addEventListener('scroll', onScrollNav, {passive:true});
+  onScrollNav();
+
+  if(reduce){ return; } // respeto total: contenido estático y visible
+
+  /* esperar a que carguen los scripts diferidos del CDN */
+  function ready(){ return window.gsap && window.ScrollTrigger; }
+  let tries = 0;
+  (function wait(){
+    if(ready()){ boot(); return; }
+    if(tries++ > 80) return; // ~8s; si nunca llega, el sitio queda visible y usable
+    setTimeout(wait, 100);
+  })();
+
+  function boot(){
+    const { gsap } = window;
+    gsap.registerPlugin(window.ScrollTrigger);
+    const ST = window.ScrollTrigger;
+    const EASE = 'power3.out';
+    document.body.classList.add('gsap-ready'); // recién aquí ocultamos los estados de reveal
+
+    /* Red de seguridad GLOBAL e infalible: pase lo que pase (ScrollTrigger lanza,
+       Lenis detiene el ticker, una vista quedó oculta), a los 3s todas las fotos
+       que sigan invisibles se fuerzan a visibles vía CSS !important. */
+    setTimeout(()=>{
+      const stuck = [...document.querySelectorAll('.clip-reveal')]
+        .some(el=>getComputedStyle(el).opacity < 1);
+      if(stuck) document.body.classList.add('images-safe');
+    }, 3000);
+
+    /* ---------- Lenis smooth scroll (inercia) ---------- */
+    let lenis = null;
+    if(window.Lenis){
+      lenis = new window.Lenis({ duration:1.15, easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)),
+        smoothWheel:true, smoothTouch:false });
+      window.lenis = lenis;
+      lenis.on('scroll', ST.update);
+      gsap.ticker.add(t=>lenis.raf(t*1000));
+      gsap.ticker.lagSmoothing(0);
+    }
+
+    /* ---------- helper: animar reveals dentro de un contenedor ---------- */
+    function animateScope(scope){
+      // reveals simples
+      scope.querySelectorAll('.reveal').forEach(el=>{
+        gsap.fromTo(el,{opacity:0,y:26},{opacity:1,y:0,duration:1,ease:EASE,
+          scrollTrigger:{trigger:el,start:'top 88%',once:true}});
+      });
+      // stagger de hijos
+      scope.querySelectorAll('.reveal-stagger').forEach(grp=>{
+        gsap.fromTo(grp.children,{opacity:0,y:22},{opacity:1,y:0,duration:.9,ease:EASE,
+          stagger:.09,scrollTrigger:{trigger:grp,start:'top 86%',once:true}});
+      });
+      // text reveal por línea (máscaras)
+      scope.querySelectorAll('.line-mask').forEach((m,i)=>{
+        const inner = m.firstElementChild; if(!inner) return;
+        gsap.fromTo(inner,{yPercent:105},{yPercent:0,duration:1.1,ease:EASE,delay:i*0.08,
+          scrollTrigger:{trigger:m,start:'top 92%',once:true}});
+      });
+      // reveal de imágenes (mecanismo CONFIABLE: opacity + scale, igual que .reveal)
+      scope.querySelectorAll('.clip-reveal').forEach(el=>{
+        // estado final garantizado: visible y natural (clearProps limpia los inline)
+        const reveal = ()=>{ gsap.to(el,{opacity:1,scale:1,duration:1.1,ease:EASE,
+          overwrite:true,clearProps:'opacity,transform,scale'}); };
+        const st = gsap.fromTo(el,{opacity:0,scale:1.04},{opacity:1,scale:1,
+          duration:1.1,ease:EASE,clearProps:'opacity,transform,scale',
+          scrollTrigger:{trigger:el,start:'top 90%',once:true}});
+        // Red de seguridad por-imagen: si tras 1.4s sigue oculta (trigger no disparó
+        // por estar en vista oculta, layout sin medir, o Lenis aún sin arrancar),
+        // se revela igual. La fiabilidad manda sobre el efecto.
+        setTimeout(()=>{ if(getComputedStyle(el).opacity < 1){ reveal(); } }, 1400);
+      });
+      // counters animados
+      scope.querySelectorAll('[data-count]').forEach(el=>{
+        const target = parseFloat(el.dataset.count);
+        const suffix = el.dataset.suffix || '';
+        const decimals = (el.dataset.count.indexOf('.')>-1)?1:0;
+        const obj = {v:0};
+        gsap.to(obj,{v:target,duration:1.6,ease:'power2.out',
+          scrollTrigger:{trigger:el,start:'top 90%',once:true},
+          onUpdate:()=>{ el.textContent = obj.v.toFixed(decimals).replace('.',',') + suffix; }});
+      });
+    }
+
+    /* ---------- parallax sutil (solo desktop fino) ---------- */
+    function parallaxScope(scope){
+      if(!fine) return;
+      // fondo de heros con foto se mueve ~18% más lento
+      const heroImg = scope.querySelector('#sm-hero-img');
+      if(heroImg){
+        gsap.to(heroImg,{yPercent:14,ease:'none',
+          scrollTrigger:{trigger:heroImg.parentElement,start:'top top',end:'bottom top',scrub:true}});
+      }
+      const sunrise = scope.querySelector('#home-sunrise');
+      if(sunrise){
+        gsap.to(sunrise,{yPercent:30,ease:'none',
+          scrollTrigger:{trigger:sunrise.parentElement,start:'top top',end:'bottom top',scrub:true}});
+      }
+    }
+
+    /* ---------- Ken Burns lentísimo en hero Santa Marta ---------- */
+    function kenBurns(){
+      const img = document.getElementById('sm-hero-img');
+      if(img) gsap.to(img,{scale:1.14,duration:20,ease:'none',repeat:-1,yoyo:true});
+    }
+
+    /* Animamos por-vista, no todo el documento de golpe: los nodos en
+       vistas display:none no tienen layout y dispararían reveals "fantasma".
+       Cada vista se anima la primera vez que se muestra. */
+    function animateView(viewEl){
+      if(!viewEl || viewEl.dataset.motionDone) return;
+      viewEl.dataset.motionDone = '1';
+      animateScope(viewEl);
+      parallaxScope(viewEl);
+    }
+    // la vista activa al cargar (home) ya tiene layout -> animar ya
+    animateView(document.querySelector('.view.active'));
+    kenBurns(); // el hero SM se prepara aunque su vista no esté visible aún
+
+    /* Hook para go()/subGiron(): anima la vista recién mostrada y recalcula.
+       Las imágenes de la vista a la que se navega deben quedar visibles SÍ O SÍ:
+       las que ya están en viewport se revelan de inmediato; el resto al hacer scroll
+       (con su red de seguridad por-imagen). */
+    window.__refreshMotion = function(){
+      requestAnimationFrame(()=>{
+        const view = document.querySelector('.view.active');
+        animateView(view);
+        ST.refresh();
+        // forzar visibles las imágenes ya presentes en el viewport de la nueva vista
+        if(view){
+          view.querySelectorAll('.clip-reveal').forEach(el=>{
+            const r = el.getBoundingClientRect();
+            if(r.top < window.innerHeight*0.95 && r.bottom > 0){
+              gsap.to(el,{opacity:1,scale:1,duration:.8,ease:EASE,
+                overwrite:true,clearProps:'opacity,transform,scale'});
+            }
+          });
+        }
+      });
+    };
+
+    /* ---------- Cursor magnético (solo puntero fino) ---------- */
+    if(fine){
+      const dot = document.getElementById('cursor-dot');
+      const ring = document.getElementById('cursor-ring');
+      document.body.classList.add('cursor-ready');
+      let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+      window.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY;
+        dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`; });
+      (function ring_raf(){ rx+=(mx-rx)*0.18; ry+=(my-ry)*0.18;
+        ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+        requestAnimationFrame(ring_raf); })();
+      const magnetSel = 'a,button,.prop-card,.ed-row,.gallery figure,[data-magnetic]';
+      document.addEventListener('mouseover',e=>{ if(e.target.closest(magnetSel)) ring.classList.add('hover'); });
+      document.addEventListener('mouseout',e=>{ if(e.target.closest(magnetSel)) ring.classList.remove('hover'); });
+      // ligera atracción magnética de los CTA principales (solo elementos pequeños)
+      document.querySelectorAll('.btn-gold,.btn-primary,.btn-wa-direct,.ed-link').forEach(el=>{
+        el.addEventListener('mousemove',e=>{
+          const r=el.getBoundingClientRect();
+          const dx=(e.clientX-(r.left+r.width/2))*0.18;
+          const dy=(e.clientY-(r.top+r.height/2))*0.18;
+          el.style.transform=`translate(${dx}px,${dy}px)`;
+        });
+        el.addEventListener('mouseleave',()=>{ el.style.transform=''; });
+      });
+    }
+
+    ST.refresh();
+  }
+})();
+</script>
+</body>
+</html>
