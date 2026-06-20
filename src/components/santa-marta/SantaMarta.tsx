@@ -264,10 +264,10 @@ function Content() {
           <div className="loc-layout">
             <iframe
               className="loc-map"
-              title="El Rodadero, Santa Marta"
+              title="Edificio El Peñón del Rodadero, Santa Marta"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              src="https://www.google.com/maps?q=El+Rodadero,+Santa+Marta&output=embed"
+              src="https://www.google.com/maps?q=Edificio+El+Pe%C3%B1%C3%B3n+del+Rodadero,+Santa+Marta&output=embed"
             />
             <div>
               <ul className="loc-list">

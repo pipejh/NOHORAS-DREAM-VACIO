@@ -339,17 +339,37 @@ h3 {
   position: relative;
   color: #fff;
   overflow: hidden;
-  padding: 148px 22px 168px;
+  min-height: 92svh;
+  display: flex;
+  align-items: center;
+  padding: 140px 22px 150px;
   text-align: left;
-  background: linear-gradient(165deg, var(--nd-navy-deep) 0%, var(--nd-navy) 55%, var(--nd-blue) 135%);
+  background: var(--nd-navy-deep);
+}
+/* Foto de fondo full-bleed con Ken Burns */
+.home-hero > picture {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+}
+.home-hero picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  animation: kenburns 26s ease-in-out infinite alternate;
 }
 .home-hero::after {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 1;
   pointer-events: none;
-  background: radial-gradient(circle at 50% -18%, rgba(234, 167, 22, 0.55), rgba(234, 167, 22, 0) 42%),
-    radial-gradient(circle at 92% 105%, rgba(127, 181, 221, 0.28), transparent 42%);
+  /* Brillo dorado arriba (marca) + scrim oscuro para legibilidad */
+  background: radial-gradient(circle at 50% 0%, rgba(234, 167, 22, 0.32), transparent 46%),
+    linear-gradient(to top, rgba(11, 26, 43, 0.88) 0%, rgba(11, 26, 43, 0.5) 48%, rgba(11, 26, 43, 0.62) 100%);
 }
 .home-hero .sunrise {
   position: absolute;
@@ -369,9 +389,15 @@ h3 {
   max-width: var(--maxw);
 }
 .home-hero h1 {
-  font-size: clamp(2.4rem, 6vw, 4.2rem);
-  max-width: 18ch;
-  margin: 18px 0 22px;
+  font-size: clamp(2.9rem, 7.4vw, 5.6rem);
+  line-height: 0.98;
+  max-width: 16ch;
+  margin: 20px 0 24px;
+  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.35);
+}
+.home-hero .eyebrow {
+  font-size: 0.82rem;
+  letter-spacing: 0.32em;
 }
 .home-hero h1 em {
   font-family: var(--font-display);
@@ -757,41 +783,61 @@ footer.site-footer .f-links {
 /* Hero Santa Marta */
 .sm-hero {
   position: relative;
-  min-height: 92vh;
+  min-height: 100svh;
   display: flex;
   align-items: flex-end;
   color: #fff;
   overflow: hidden;
 }
-.sm-hero img {
+/* La foto del hero llena la sección (el <picture> debe ocupar todo, no colapsar) */
+.sm-hero > picture {
   position: absolute;
   inset: 0;
+  z-index: 0;
+  display: block;
+}
+.sm-hero picture img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-.sm-hero img {
   object-position: center;
+  display: block;
+  /* Ken Burns: zoom lentísimo y continuo (slow luxury, docs/10) */
+  animation: kenburns 22s ease-in-out infinite alternate;
+}
+@keyframes kenburns {
+  from {
+    transform: scale(1.04);
+  }
+  to {
+    transform: scale(1.16) translateY(-1.5%);
+  }
 }
 .sm-hero::after {
   content: "";
   position: absolute;
   inset: 0;
-  /* Scrim más oscuro para que el texto se lea sobre la foto */
-  background: linear-gradient(to top, rgba(13, 30, 48, 0.9) 0%, rgba(13, 30, 48, 0.55) 45%, rgba(13, 30, 48, 0.45) 100%);
+  z-index: 1;
+  /* Scrim para legibilidad del texto + vignette inferior dramática */
+  background: linear-gradient(to top, rgba(11, 26, 43, 0.92) 0%, rgba(11, 26, 43, 0.5) 42%, rgba(11, 26, 43, 0.3) 70%, rgba(11, 26, 43, 0.5) 100%);
 }
 .sm-hero .wrap {
   position: relative;
   z-index: 3;
-  padding-bottom: 54px;
+  padding-bottom: 64px;
   padding-top: 120px;
   width: 100%;
 }
+.sm-hero .eyebrow {
+  font-size: 0.82rem;
+  letter-spacing: 0.32em;
+}
 .sm-hero h1 {
-  font-size: clamp(2.6rem, 6.4vw, 5rem);
-  max-width: 16ch;
-  margin: 14px 0 16px;
-  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+  font-size: clamp(3rem, 8vw, 6.4rem);
+  line-height: 0.98;
+  max-width: 15ch;
+  margin: 18px 0 18px;
+  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.45);
 }
 .sm-hero h1 em {
   font-family: var(--font-display);
@@ -1133,11 +1179,16 @@ footer.site-footer .f-links {
   border: 1px solid transparent;
   background: none;
 }
+.day .dn {
+  line-height: 1;
+}
 .day .pr {
-  font-size: 0.56rem;
-  font-weight: 500;
+  font-size: 0.5rem;
+  font-weight: 600;
   color: var(--nd-muted);
-  margin-top: 1px;
+  margin-top: 2px;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
 }
 .day.empty {
   visibility: hidden;

@@ -20,7 +20,11 @@ export default function HomePage() {
     <>
       {/* ===== Hero de marca ===== */}
       <section className="home-hero grain">
-        <span className="sunrise" aria-hidden="true" />
+        <picture>
+          <source media="(max-width: 768px)" srcSet="/santa-marta/hero-mobile.jpg" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/santa-marta/hero-desktop.jpg" alt="Atardecer sobre el Caribe colombiano" fetchPriority="high" />
+        </picture>
         <div className="wrap">
           <span className="eyebrow">Propiedades en Colombia</span>
           <h1>

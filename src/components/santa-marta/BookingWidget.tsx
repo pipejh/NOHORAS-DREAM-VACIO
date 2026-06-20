@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   PRECIO_BASE,
   calcularCotizacion,
-  esTemporadaAlta,
+  esTemporadaEspecial,
   formatCOP,
   getPrecioNoche,
   mensajeWhatsApp,
@@ -197,7 +197,7 @@ export function BookingWidget() {
             const past = isPast(c.key);
             const blockedDay = isBlocked(c.key);
             const date = fromKey(c.key);
-            const high = !past && !blockedDay && esTemporadaAlta(date);
+            const high = !past && !blockedDay && esTemporadaEspecial(date);
             const selected = c.key === checkIn || c.key === checkOut;
             const inRange =
               checkIn && checkOut && c.key > checkIn && c.key < checkOut;
@@ -223,9 +223,9 @@ export function BookingWidget() {
                   (e.key === "Enter" || e.key === " ") && onPick(c.key)
                 }
               >
-                {c.day}
+                <span className="dn">{c.day}</span>
                 {!past && !blockedDay && (
-                  <span className="pr">${Math.round(getPrecioNoche(date).precio / 1000)}</span>
+                  <span className="pr">{formatCOP(getPrecioNoche(date).precio)}</span>
                 )}
               </div>
             );

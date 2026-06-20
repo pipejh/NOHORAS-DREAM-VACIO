@@ -36,6 +36,7 @@ function structuredData() {
     ],
     address: {
       "@type": "PostalAddress",
+      streetAddress: "Edificio El Peñón del Rodadero, El Rodadero",
       addressLocality: "Santa Marta",
       addressRegion: "Magdalena",
       addressCountry: "CO",

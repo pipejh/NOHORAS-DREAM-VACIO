@@ -108,6 +108,17 @@ export function getPrecioNoche(date: Date): PrecioNoche {
   return { precio: PRECIO_BASE, temporada: "Regular" };
 }
 
+/** ¿Esta noche cae dentro de una temporada especial de la tabla (no por finde)? */
+export function esTemporadaEspecial(date: Date): boolean {
+  const yyyy = date.getFullYear();
+  const mmdd = getMMDD(date);
+  return TEMPORADAS.some((t) =>
+    t.inicio.length === 10
+      ? `${yyyy}-${mmdd}` >= t.inicio && `${yyyy}-${mmdd}` <= t.fin
+      : mmdd >= t.inicio && mmdd <= t.fin,
+  );
+}
+
 /** ¿Esta noche es de temporada alta (precio por encima del base)? */
 export function esTemporadaAlta(date: Date): boolean {
   return getPrecioNoche(date).precio > PRECIO_BASE;
