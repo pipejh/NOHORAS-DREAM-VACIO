@@ -103,7 +103,7 @@ export const dict = {
     sm_loc_t: "En el corazón de El Rodadero",
     sm_loc_p:
       "A pasos de la playa, rodeado de restaurantes y con la mejor vista de la bahía.",
-    sm_loc_1: "Edificio El Peñón del Rodadero, frente a la bahía — Santa Marta.",
+    sm_loc_1: "Carrera 1 #17-69, El Rodadero (Gaira) — Santa Marta, frente a la bahía.",
     sm_loc_2: "Playa, restaurantes y vida nocturna a pocos minutos a pie.",
     sm_loc_3: "A ~15 min del aeropuerto Simón Bolívar.",
 
@@ -218,7 +218,7 @@ export const dict = {
     sm_loc_t: "In the heart of El Rodadero",
     sm_loc_p:
       "Steps from the beach, surrounded by restaurants and with the best view of the bay.",
-    sm_loc_1: "El Peñón del Rodadero building, facing the bay — Santa Marta.",
+    sm_loc_1: "Carrera 1 #17-69, El Rodadero (Gaira) — Santa Marta, facing the bay.",
     sm_loc_2: "Beach, restaurants and nightlife a few minutes' walk away.",
     sm_loc_3: "~15 min from Simón Bolívar airport.",
 

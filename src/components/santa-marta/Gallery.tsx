@@ -15,7 +15,6 @@ const PHOTOS: Photo[] = [
   { src: "/santa-marta/pareja_6.jpg", cap: "Brisa del Caribe", cls: "tall" },
   { src: "/santa-marta/img_4528.jpg", cap: "El loft" },
   { src: "/santa-marta/img_4530.jpg", cap: "Detalles" },
-  { src: "/santa-marta/img_4532.jpg", cap: "Detalles" },
 ];
 
 export function Gallery() {
