@@ -1,7 +1,13 @@
 import { formatCOP, formatFecha, formatPeriodo } from "@/lib/format";
 import { ESTADO_LABEL, type EstadoMes } from "@/lib/giron/estado";
 
-export function EstadoMesCard({ estadoMes }: { estadoMes: EstadoMes }) {
+export function EstadoMesCard({
+  estadoMes,
+  enRevision = false,
+}: {
+  estadoMes: EstadoMes;
+  enRevision?: boolean;
+}) {
   const { estado, periodo, fechaLimite, montoPendiente } = estadoMes;
   const cls =
     estado === "al_dia"
@@ -26,10 +32,13 @@ export function EstadoMesCard({ estadoMes }: { estadoMes: EstadoMes }) {
             : ` antes del ${formatFecha(fechaLimite)}.`}
         </p>
       )}
-      <p className="estado-note">
-        Para pagar o cualquier duda, escríbenos por WhatsApp. El pago en línea
-        llega muy pronto.
-      </p>
+      {estado !== "al_dia" && (
+        <p className="estado-note">
+          {enRevision
+            ? "Recibimos tu comprobante; lo estamos confirmando."
+            : "Transfiere y sube tu comprobante aquí abajo. ¡Es gratis!"}
+        </p>
+      )}
     </div>
   );
 }

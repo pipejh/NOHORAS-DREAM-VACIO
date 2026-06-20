@@ -12,6 +12,7 @@ const TABS: Record<"portal" | "admin", Tab[]> = {
   admin: [
     { href: "/giron/admin", label: "Dashboard" },
     { href: "/giron/admin/arrendatarios", label: "Arrendatarios" },
+    { href: "/giron/admin/configuracion", label: "Configuración" },
   ],
 };
 

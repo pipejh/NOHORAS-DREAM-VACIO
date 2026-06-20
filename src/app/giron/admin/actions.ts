@@ -138,6 +138,63 @@ export async function registrarPago(
   return { ok: "Pago registrado." };
 }
 
+/** Guardar los datos de cobro (a dónde transfieren los arrendatarios). */
+export async function guardarPagoInfo(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  await requireAdmin();
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("giron_settings")
+    .update({
+      titular: String(formData.get("titular") ?? "").trim() || null,
+      banco: String(formData.get("banco") ?? "").trim() || null,
+      tipo_cuenta: String(formData.get("tipo_cuenta") ?? "").trim() || null,
+      numero_cuenta: String(formData.get("numero_cuenta") ?? "").trim() || null,
+      nequi: String(formData.get("nequi") ?? "").trim() || null,
+      llave_breb: String(formData.get("llave_breb") ?? "").trim() || null,
+      instrucciones: String(formData.get("instrucciones") ?? "").trim() || null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", 1);
+  if (error) return { error: `No se pudo guardar: ${error.message}` };
+  revalidatePath("/giron/admin/configuracion");
+  revalidatePath("/giron/portal");
+  return { ok: "Datos de cobro guardados." };
+}
+
+/** Aprobar un pago reportado (transferencia) → queda al día. */
+export async function aprobarPago(formData: FormData): Promise<void> {
+  const session = await requireAdmin();
+  const paymentId = String(formData.get("payment_id") ?? "");
+  const leaseId = String(formData.get("lease_id") ?? "");
+  if (!paymentId) return;
+  const supabase = await createClient();
+  await supabase
+    .from("giron_payments")
+    .update({
+      estado: "aprobado",
+      pagado_at: new Date().toISOString(),
+      registrado_por: session.userId,
+    })
+    .eq("id", paymentId);
+  revalidatePath(`/giron/admin/arrendatarios/${leaseId}`);
+  revalidatePath("/giron/admin");
+}
+
+/** Rechazar un pago reportado. */
+export async function rechazarPago(formData: FormData): Promise<void> {
+  await requireAdmin();
+  const paymentId = String(formData.get("payment_id") ?? "");
+  const leaseId = String(formData.get("lease_id") ?? "");
+  if (!paymentId) return;
+  const supabase = await createClient();
+  await supabase.from("giron_payments").update({ estado: "rechazado" }).eq("id", paymentId);
+  revalidatePath(`/giron/admin/arrendatarios/${leaseId}`);
+  revalidatePath("/giron/admin");
+}
+
 /** Finalizar un contrato y liberar la unidad. */
 export async function finalizarContrato(formData: FormData): Promise<void> {
   await requireAdmin();

@@ -8,7 +8,7 @@ import { formatCOP, formatFecha, formatPeriodo } from "@/lib/format";
 import { GironBar } from "@/components/giron/GironBar";
 import { EstadoBadge, PagoBadge } from "@/components/giron/Badge";
 import { RegistrarPagoForm } from "@/components/giron/RegistrarPagoForm";
-import { finalizarContrato } from "@/app/giron/admin/actions";
+import { finalizarContrato, aprobarPago, rechazarPago } from "@/app/giron/admin/actions";
 
 export const metadata: Metadata = {
   title: "Detalle de arrendatario — Girón Admin",
@@ -97,7 +97,8 @@ export default async function DetalleArrendatario({
                     <th>Monto</th>
                     <th>Método</th>
                     <th>Estado</th>
-                    <th>Fecha</th>
+                    <th>Comprobante</th>
+                    <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -107,7 +108,33 @@ export default async function DetalleArrendatario({
                       <td>{formatCOP(p.monto)}</td>
                       <td className="cap">{p.metodo ?? "—"}</td>
                       <td><PagoBadge estado={p.estado} /></td>
-                      <td>{p.pagado_at ? formatFecha(p.pagado_at.slice(0, 10)) : "—"}</td>
+                      <td>
+                        {p.comprobante_url ? (
+                          <a className="g-link" href={`/giron/comprobante/${p.id}`} target="_blank" rel="noopener noreferrer">
+                            Ver
+                          </a>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
+                      <td>
+                        {p.estado === "pendiente" ? (
+                          <div className="g-row-actions">
+                            <form action={aprobarPago}>
+                              <input type="hidden" name="payment_id" value={p.id} />
+                              <input type="hidden" name="lease_id" value={lease.id} />
+                              <button type="submit" className="g-approve">Aprobar</button>
+                            </form>
+                            <form action={rechazarPago}>
+                              <input type="hidden" name="payment_id" value={p.id} />
+                              <input type="hidden" name="lease_id" value={lease.id} />
+                              <button type="submit" className="g-danger-link">Rechazar</button>
+                            </form>
+                          </div>
+                        ) : (
+                          <span className="g-sub">{p.pagado_at ? formatFecha(p.pagado_at.slice(0, 10)) : "—"}</span>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

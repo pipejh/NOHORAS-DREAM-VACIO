@@ -1805,3 +1805,28 @@ footer.site-footer .f-links {
 @media (max-width: 900px) {
   .g-feature-grid, .kpi-grid, .portal-grid, .g-form-grid { grid-template-columns: 1fr; }
 }
+
+/* ── Girón Fase 3: pago por transferencia ── */
+.g-field textarea {
+  border: 1px solid rgba(16, 42, 69, 0.18);
+  border-radius: var(--r-md);
+  padding: 11px 13px;
+  font-family: inherit;
+  font-size: 0.96rem;
+  color: var(--nd-ink);
+  background: #fff;
+  outline: none;
+  resize: vertical;
+}
+.g-field textarea:focus { border-color: var(--nd-blue); }
+.pago-card { margin-top: 0; }
+.pago-intro { font-size: 1.05rem; color: var(--nd-ink); margin-bottom: 12px; }
+.pago-intro strong { color: var(--nd-navy); }
+.pago-datos { margin-bottom: 14px; }
+.pago-datos dd { font-family: var(--font-body); }
+.pago-instr { font-size: 0.9rem; color: var(--nd-muted); background: var(--nd-sand); padding: 12px 14px; border-radius: var(--r-md); margin-bottom: 18px; }
+.pago-form { display: flex; flex-direction: column; gap: 14px; border-top: 1px solid var(--hairline); padding-top: 18px; }
+.pago-form input[type="file"] { font-size: 0.9rem; }
+.g-row-actions { display: flex; gap: 12px; align-items: center; }
+.g-approve { color: var(--ok); font-weight: 700; font-size: 0.85rem; }
+.g-approve:hover { text-decoration: underline; }

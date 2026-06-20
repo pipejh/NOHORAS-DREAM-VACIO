@@ -39,6 +39,7 @@ export default async function HistorialPage() {
                     <th>Método</th>
                     <th>Estado</th>
                     <th>Fecha</th>
+                    <th>Comprobante</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -51,6 +52,15 @@ export default async function HistorialPage() {
                         <PagoBadge estado={p.estado} />
                       </td>
                       <td>{p.pagado_at ? formatFecha(p.pagado_at.slice(0, 10)) : "—"}</td>
+                      <td>
+                        {p.comprobante_url ? (
+                          <a className="g-link" href={`/giron/comprobante/${p.id}`} target="_blank" rel="noopener noreferrer">
+                            Ver
+                          </a>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
