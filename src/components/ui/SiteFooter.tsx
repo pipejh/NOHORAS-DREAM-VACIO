@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function SiteFooter() {
@@ -7,10 +8,13 @@ export function SiteFooter() {
       <div className="f-top" />
       <div className="wrap f-inner">
         <div>
-          <span className="wordmark">
-            NOHORAS <span className="dream">DREAM</span>
-          </span>
-          <br />
+          <Image
+            className="f-logo"
+            src="/brand/logo-white.png"
+            alt="Nohoras Dream"
+            width={520}
+            height={493}
+          />
           <small>Hospitalidad premium · Colombia</small>
         </div>
 

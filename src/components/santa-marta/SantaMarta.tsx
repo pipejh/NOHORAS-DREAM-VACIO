@@ -105,16 +105,17 @@ function Content() {
 
   return (
     <>
-      {/* Hero */}
+      {/* Hero — foto horizontal en desktop, vertical en mobile (art direction) */}
       <section className="sm-hero grain">
-        <Image
-          src="/santa-marta/pareja_4.jpg"
-          alt="Balcón con vista a El Rodadero al atardecer"
-          fill
-          priority
-          sizes="100vw"
-          style={{ objectFit: "cover" }}
-        />
+        <picture>
+          <source media="(max-width: 768px)" srcSet="/santa-marta/hero-mobile.jpg" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/santa-marta/hero-desktop.jpg"
+            alt="Atardecer dorado sobre El Rodadero desde el balcón del loft"
+            fetchPriority="high"
+          />
+        </picture>
         <LangSwitch />
         <div className="wrap">
           <span className="eyebrow">{t("sm_eyebrow")}</span>
@@ -172,8 +173,8 @@ function Content() {
           <div className="incl-layout">
             <div className="incl-media">
               <Image
-                src="/santa-marta/img_4528.jpg"
-                alt="Interior del loft"
+                src="/santa-marta/includes.jpg"
+                alt="Sala del loft con vista al mar"
                 fill
                 sizes="(max-width: 900px) 100vw, 50vw"
                 style={{ objectFit: "cover" }}

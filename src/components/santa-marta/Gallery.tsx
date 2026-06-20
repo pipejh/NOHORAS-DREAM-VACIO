@@ -6,15 +6,15 @@ import { useEffect, useState } from "react";
 type Photo = { src: string; cap: string; cls?: "big" | "tall" };
 
 const PHOTOS: Photo[] = [
-  { src: "/santa-marta/pareja_4.jpg", cap: "El Rodadero · Amanecer", cls: "big" },
-  { src: "/santa-marta/img_4500.jpg", cap: "Vista a la bahía" },
+  { src: "/santa-marta/img_4523.jpg", cap: "El Rodadero · Atardecer", cls: "big" },
+  { src: "/santa-marta/img_4500.jpg", cap: "La vista" },
   { src: "/santa-marta/img_4506.jpg", cap: "Interior" },
-  { src: "/santa-marta/img_4523.jpg", cap: "Balcón", cls: "tall" },
-  { src: "/santa-marta/pareja_1.jpg", cap: "Atardecer" },
-  { src: "/santa-marta/img_4540.jpg", cap: "Cocina" },
-  { src: "/santa-marta/img_4508.jpg", cap: "Sala", cls: "tall" },
-  { src: "/santa-marta/pareja_6.jpg", cap: "Caribe" },
-  { src: "/santa-marta/img_4528.jpg", cap: "Habitación" },
+  { src: "/santa-marta/pareja_4.jpg", cap: "El balcón", cls: "tall" },
+  { src: "/santa-marta/img_4540.jpg", cap: "Atardecer dorado" },
+  { src: "/santa-marta/img_4508.jpg", cap: "El loft" },
+  { src: "/santa-marta/pareja_6.jpg", cap: "Brisa del Caribe", cls: "tall" },
+  { src: "/santa-marta/img_4528.jpg", cap: "El loft" },
+  { src: "/santa-marta/img_4530.jpg", cap: "Detalles" },
   { src: "/santa-marta/img_4532.jpg", cap: "Detalles" },
 ];
 

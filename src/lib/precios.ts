@@ -13,6 +13,16 @@
 // ─── Precio base (temporada regular) ─────────────────────────────────────────
 export const PRECIO_BASE = 200_000; // COP por noche
 
+// ─── Recargo de fin de semana ────────────────────────────────────────────────
+// En temporada regular, la noche de viernes y sábado cuesta más. En temporadas
+// especiales manda el precio de la temporada (que ya es más alto): el finde
+// actúa como "piso". getDay(): 0=domingo … 5=viernes, 6=sábado.
+export const PRECIO_FIN_SEMANA = 250_000; // COP por noche (vie/sáb, temporada regular)
+const NOCHES_FIN_SEMANA = [5, 6];
+export function esFinDeSemana(date: Date): boolean {
+  return NOCHES_FIN_SEMANA.includes(date.getDay());
+}
+
 // ─── Costos adicionales (se pagan en sitio) ──────────────────────────────────
 export const COSTO_ASEO = 60_000; // COP — a la Señora Deicy al check-in
 export const COSTO_MANILLA = 35_000; // COP por persona — en el lobby al llegar
@@ -71,7 +81,7 @@ function getMMDD(date: Date): string {
 
 export type PrecioNoche = { precio: number; temporada: string };
 
-/** Precio y temporada de una noche concreta. */
+/** Precio y temporada de una noche concreta (incluye recargo de fin de semana). */
 export function getPrecioNoche(date: Date): PrecioNoche {
   const yyyy = date.getFullYear();
   const mmdd = getMMDD(date);
@@ -81,14 +91,19 @@ export function getPrecioNoche(date: Date): PrecioNoche {
       // Temporada con año fijo (YYYY-MM-DD): comparar fecha completa.
       const iso = `${yyyy}-${mmdd}`;
       if (iso >= t.inicio && iso <= t.fin) {
-        return { precio: t.precio, temporada: t.nombre };
+        // En temporada especial manda el precio de temporada; el finde es piso.
+        return { precio: Math.max(t.precio, esFinDeSemana(date) ? PRECIO_FIN_SEMANA : 0), temporada: t.nombre };
       }
     } else {
       // Temporada recurrente (MM-DD): comparar solo mes-día.
       if (mmdd >= t.inicio && mmdd <= t.fin) {
-        return { precio: t.precio, temporada: t.nombre };
+        return { precio: Math.max(t.precio, esFinDeSemana(date) ? PRECIO_FIN_SEMANA : 0), temporada: t.nombre };
       }
     }
+  }
+  // Temporada regular: fin de semana sube a PRECIO_FIN_SEMANA.
+  if (esFinDeSemana(date)) {
+    return { precio: PRECIO_FIN_SEMANA, temporada: "Fin de semana" };
   }
   return { precio: PRECIO_BASE, temporada: "Regular" };
 }

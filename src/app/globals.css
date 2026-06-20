@@ -195,6 +195,12 @@ h3 {
   height: 36px;
   flex: none;
 }
+.brand .brand-logo {
+  height: 50px;
+  width: auto;
+  display: block;
+  flex: none;
+}
 .brand .lockup {
   display: flex;
   flex-direction: column;
@@ -608,6 +614,12 @@ footer.site-footer .f-inner {
   gap: 16px;
   padding-top: 40px;
 }
+footer.site-footer .f-logo {
+  height: 72px;
+  width: auto;
+  display: block;
+  margin-bottom: 8px;
+}
 footer.site-footer .wordmark {
   color: #fff;
   font-family: var(--font-wordmark);
@@ -758,11 +770,15 @@ footer.site-footer .f-links {
   height: 100%;
   object-fit: cover;
 }
+.sm-hero img {
+  object-position: center;
+}
 .sm-hero::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(16, 42, 69, 0.78) 0%, rgba(16, 42, 69, 0.15) 45%, rgba(16, 42, 69, 0.25) 100%);
+  /* Scrim más oscuro para que el texto se lea sobre la foto */
+  background: linear-gradient(to top, rgba(13, 30, 48, 0.9) 0%, rgba(13, 30, 48, 0.55) 45%, rgba(13, 30, 48, 0.45) 100%);
 }
 .sm-hero .wrap {
   position: relative;

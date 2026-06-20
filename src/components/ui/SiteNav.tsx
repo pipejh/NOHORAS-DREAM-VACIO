@@ -1,9 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Isotype } from "./Logo";
 
 const LINKS = [
   { href: "/", label: "Inicio" },
@@ -22,14 +22,15 @@ export function SiteNav() {
   return (
     <header className="topbar">
       <div className="wrap topbar-inner">
-        <Link href="/" className="brand" onClick={() => setOpen(false)}>
-          <Isotype />
-          <span className="lockup">
-            <span className="wordmark">
-              NOHORAS <span className="dream">DREAM</span>
-            </span>
-            <small>Propiedades · Colombia</small>
-          </span>
+        <Link href="/" className="brand" onClick={() => setOpen(false)} aria-label="Nohoras Dream — inicio">
+          <Image
+            className="brand-logo"
+            src="/brand/logo-nohoras-dream-transparent.png"
+            alt="Nohoras Dream"
+            width={520}
+            height={493}
+            priority
+          />
         </Link>
 
         <button
