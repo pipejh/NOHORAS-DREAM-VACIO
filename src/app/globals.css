@@ -1661,3 +1661,147 @@ footer.site-footer .f-links {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ====================================================================
+   GIRÓN — gestión de arriendos (Fase 2). Sobriedad funcional, misma calidez.
+   ==================================================================== */
+
+/* Landing pública */
+.g-hero {
+  background: linear-gradient(165deg, var(--nd-navy-deep) 0%, var(--nd-navy) 60%, var(--nd-blue) 140%);
+  color: #fff;
+  padding: clamp(90px, 14vw, 150px) 0 clamp(70px, 10vw, 110px);
+}
+.g-hero .eyebrow { color: var(--nd-gold-soft); }
+.g-hero h1 {
+  font-size: clamp(2.4rem, 5.5vw, 4rem);
+  max-width: 16ch;
+  margin: 16px 0 18px;
+}
+.g-hero h1 em { font-style: italic; color: var(--nd-gold-soft); }
+.g-hero p { color: rgba(255, 255, 255, 0.82); max-width: 52ch; font-size: 1.06rem; }
+.g-hero-cta { margin-top: 26px; }
+.g-feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.g-feature {
+  background: #fff; border-radius: var(--r-lg); padding: 28px;
+  box-shadow: var(--shadow-sm); border: 1px solid rgba(16, 42, 69, 0.06);
+}
+.g-feature h3 { font-family: var(--font-display); font-size: 1.5rem; color: var(--nd-navy); margin-bottom: 8px; }
+.g-feature p { color: var(--nd-muted); font-size: 0.96rem; }
+.g-cta-band { background: var(--nd-sand); text-align: center; padding: clamp(56px, 9vw, 96px) 0; }
+.g-cta-band h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); color: var(--nd-navy); margin-bottom: 8px; }
+.g-cta-band p { color: var(--nd-muted); margin-bottom: 22px; }
+
+/* Auth */
+.g-auth {
+  min-height: 78vh; display: flex; align-items: center; justify-content: center;
+  padding: 100px 22px; background: var(--nd-cream);
+}
+.g-auth-inner { width: 100%; max-width: 400px; text-align: center; }
+.g-auth-inner .eyebrow { color: #b8810c; }
+.g-auth-title { font-size: 2.2rem; color: var(--nd-navy); margin: 8px 0 6px; }
+.g-auth-sub { color: var(--nd-muted); margin-bottom: 26px; }
+.login-card, .g-form {
+  background: #fff; border-radius: var(--r-lg); padding: 26px;
+  box-shadow: var(--shadow-md); border: 1px solid rgba(16, 42, 69, 0.06);
+  text-align: left; display: flex; flex-direction: column; gap: 14px;
+}
+.login-help { font-size: 0.8rem; color: var(--nd-muted); text-align: center; margin-top: 4px; }
+.g-back { display: inline-block; margin-top: 20px; color: var(--nd-blue); font-size: 0.9rem; font-weight: 600; }
+
+/* Campos de formulario */
+.g-field { display: flex; flex-direction: column; gap: 6px; }
+.g-field > span { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--nd-muted); font-weight: 600; }
+.g-field input, .g-field select {
+  border: 1px solid rgba(16, 42, 69, 0.18); border-radius: var(--r-md);
+  padding: 11px 13px; font-family: inherit; font-size: 0.96rem; color: var(--nd-ink);
+  background: #fff; outline: none; transition: border-color 0.2s;
+}
+.g-field input:focus, .g-field select:focus { border-color: var(--nd-blue); }
+.g-error { color: var(--danger); font-size: 0.9rem; background: rgba(192, 85, 47, 0.08); padding: 10px 12px; border-radius: var(--r-md); }
+.g-ok { color: var(--ok); font-size: 0.9rem; background: rgba(46, 125, 91, 0.1); padding: 10px 12px; border-radius: var(--r-md); }
+.g-form-note { font-size: 0.88rem; color: var(--nd-muted); background: var(--nd-sand); padding: 12px 14px; border-radius: var(--r-md); }
+.g-form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.g-form .btn { align-self: flex-start; }
+
+/* Barra de tabs Girón */
+.giron-tabs { background: var(--nd-navy-deep); color: #fff; padding: 12px 0; }
+.giron-tabs .wrap { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.giron-tabs .gt-label { font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--nd-gold-soft); font-weight: 600; margin-right: 6px; }
+.giron-tabs a { padding: 8px 15px; border-radius: 99px; font-size: 0.86rem; font-weight: 500; color: rgba(255, 255, 255, 0.78); transition: 0.2s; }
+.giron-tabs a:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+.giron-tabs a.on { background: var(--nd-blue); color: #fff; }
+.gt-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+.gt-user { font-size: 0.85rem; color: rgba(255, 255, 255, 0.85); }
+.gt-logout { color: var(--nd-gold-soft); font-size: 0.84rem; font-weight: 600; }
+.gt-logout:hover { color: #fff; }
+
+/* Secciones de Girón */
+.g-section { padding-top: 40px; }
+.g-h1 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); color: var(--nd-navy); margin: 4px 0 24px; }
+.g-h2 { font-size: 1.5rem; color: var(--nd-navy); margin: 36px 0 14px; }
+.g-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 22px; }
+.g-sub { display: block; font-size: 0.78rem; color: var(--nd-muted); }
+.g-link { color: var(--nd-blue); font-weight: 600; font-size: 0.86rem; white-space: nowrap; }
+.g-empty { background: #fff; border: 1px dashed rgba(16, 42, 69, 0.2); border-radius: var(--r-lg); padding: 40px; text-align: center; color: var(--nd-muted); }
+.g-empty .btn { margin-top: 14px; }
+
+/* Cards y dl */
+.portal-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 22px; align-items: start; }
+.g-card { background: #fff; border-radius: var(--r-lg); padding: 26px; box-shadow: var(--shadow-sm); border: 1px solid rgba(16, 42, 69, 0.06); }
+.g-card-title { font-family: var(--font-display); font-size: 1.4rem; color: var(--nd-navy); margin-bottom: 16px; }
+.g-dl { display: flex; flex-direction: column; gap: 0; }
+.g-dl > div { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-top: 1px solid var(--hairline); }
+.g-dl > div:first-child { border-top: 0; }
+.g-dl dt { color: var(--nd-muted); font-size: 0.9rem; }
+.g-dl dd { color: var(--nd-navy); font-weight: 600; font-size: 0.92rem; text-align: right; }
+
+/* Estado del mes (card grande) */
+.estado-card { border-radius: var(--r-lg); padding: 30px; color: #fff; position: relative; overflow: hidden; }
+.estado-card.ok { background: linear-gradient(135deg, #2e7d5b, #1f5e43); }
+.estado-card.warn { background: linear-gradient(135deg, #d79a1f, #b07c10); }
+.estado-card.danger { background: linear-gradient(135deg, #b9542f, #933e21); }
+.estado-card::before { content: ""; position: absolute; left: 0; top: 0; right: 0; height: 4px; background: var(--wave); }
+.estado-eyebrow { font-size: 0.76rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.9; font-weight: 600; }
+.estado-main { margin: 8px 0 10px; }
+.estado-label { font-family: var(--font-display); font-size: 2.2rem; font-weight: 600; }
+.estado-msg { font-size: 1rem; opacity: 0.95; }
+.estado-msg strong { font-weight: 700; }
+.estado-note { font-size: 0.82rem; opacity: 0.82; margin-top: 14px; }
+
+/* KPIs */
+.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.kpi { background: #fff; border-radius: var(--r-lg); padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid rgba(16, 42, 69, 0.06); position: relative; overflow: hidden; }
+.kpi::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--wave); }
+.kpi-label { display: block; font-size: 0.78rem; color: var(--nd-muted); letter-spacing: 0.04em; }
+.kpi-value { display: block; font-family: var(--font-display); font-size: 2.2rem; font-weight: 600; color: var(--nd-navy); margin-top: 6px; }
+.kpi-sub { font-size: 1.1rem; color: var(--nd-muted); }
+
+/* Panel + tabla */
+.g-panel { background: #fff; border-radius: var(--r-lg); box-shadow: var(--shadow-sm); border: 1px solid rgba(16, 42, 69, 0.06); overflow-x: auto; }
+.g-table { width: 100%; border-collapse: collapse; min-width: 620px; }
+.g-table th { text-align: left; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--nd-muted); font-weight: 600; padding: 14px 20px; background: var(--nd-sand); }
+.g-table td { padding: 14px 20px; font-size: 0.9rem; border-top: 1px solid rgba(16, 42, 69, 0.07); color: var(--nd-ink); vertical-align: middle; }
+.g-table td strong { color: var(--nd-navy); }
+.g-table .g-sub { display: block; font-size: 0.74rem; color: var(--nd-muted); }
+.cap { text-transform: capitalize; }
+
+/* Badges de estado */
+.g-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+.g-badge .dot { width: 7px; height: 7px; border-radius: 50%; }
+.g-badge.ok { background: rgba(46, 125, 91, 0.12); color: var(--ok); }
+.g-badge.ok .dot { background: var(--ok); }
+.g-badge.warn { background: rgba(234, 167, 22, 0.16); color: #9a6f0c; }
+.g-badge.warn .dot { background: var(--warn); }
+.g-badge.danger { background: rgba(192, 85, 47, 0.13); color: var(--danger); }
+.g-badge.danger .dot { background: var(--danger); }
+.g-badge.muted { background: rgba(107, 114, 128, 0.14); color: var(--nd-muted); }
+.g-badge.muted .dot { background: var(--nd-muted); }
+
+.g-inline-form { margin-top: 18px; }
+.g-danger-link { color: var(--danger); font-size: 0.85rem; font-weight: 600; }
+.g-danger-link:hover { text-decoration: underline; }
+
+@media (max-width: 900px) {
+  .g-feature-grid, .kpi-grid, .portal-grid, .g-form-grid { grid-template-columns: 1fr; }
+}
